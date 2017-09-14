@@ -10,7 +10,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  components: {
+    components: {
       // Loading
     },
     computed: {
