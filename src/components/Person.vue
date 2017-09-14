@@ -1,0 +1,211 @@
+<template>
+	<div class="container">
+        <header>
+            <ul>
+                <li><a href="">播主</a></li>
+                <li><a href="">观看</a></li>
+                <li><a href="">介绍</a></li>
+            </ul>
+        </header>
+        <div id="cnt">
+            <img src="../assets/bg.png" alt="">
+            <div class="cnt">
+                <ul>
+                    <li>
+                        <p>18</p>
+                        <p>直播数</p>
+                    </li>
+                    <li>
+                        <p>26</p>
+                        <p>视频数</p>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <p>818</p>
+                        <p>粉丝数</p>
+                    </li>
+                    <li>
+                        <p>666666</p>
+                        <p>点赞数</p>
+                    </li>
+                </ul>
+            </div>
+            <div class="avatar">
+                <img src="" alt="">
+            </div>
+        </div>
+        <div id="detail">
+            <h3>real__隔壁老胖兔</h3>
+            <h4>forget forgive future</h4>
+            <div class="btn">
+                <button></button>
+                <button></button>
+            </div>
+            <ul class="tab">
+                <li class="active">主页</li>
+                <li>视频</li>
+                <li>资料</li>
+            </ul>
+        </div>
+        <div id="index">
+        	<ul>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        		<li>
+        			<a href="">
+        				<div class="thumb">
+        					<img src="" alt="">
+        					<span>13:25</span>
+        				</div>
+        				<h3>你不知道的接头小吃</h3>
+        				<p>6666</p>
+        			</a>
+        		</li>
+        	</ul>
+        	<div class="others">
+        		<div class="left">
+        				<div class="liver">
+        					<div class="avatar"><img src="" alt=""></div>
+        					<h4>病毒猎人同人小说</h4>
+        					<p>玩的666666666666</p>
+        					<a href="">前往直播间>></a>
+        				</div>
+        				<div class="otherlinks">
+        					<h3>主播其他链接</h3>
+        				</div>
+        				<div class="assolivers"></div>
+        		</div>
+        		<div class="right"></div>
+        	</div>
+        </div> 
+    </div>
+</template>
+
+<style scoped>
+	ul,
+	li{list-style:none;float:left;}
+	a{text-decoration:none;color:#fff;}
+	.container{min-width:1200px;}
+	header{height:70px;background:#333;}
+	header ul{float:left;font-size:22px;}
+	header ul li{float:left;margin-left:110px;line-height:70px;color:fff;}
+	#cnt{position:relative;font-size:0;}
+	#cnt img{width:100%;}
+	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
+	#cnt .cnt ul{width:50%;color:#000;font-size:20px;}
+	#cnt .cnt ul:nth-child(1) li{}
+	#cnt .cnt ul:nth-child(2) li{}
+	#cnt .cnt li{width:50%;text-align:center;display:inline-block;}
+	#cnt .avatar{z-index:1;width:216px;height:216px;background:#999;border-radius:100%;position:absolute;bottom:-108px;left:50%;transform:translateX(-50%);box-shadow:4px 0 30px rgba(51,51,51,.25)}
+	#detail{position:relative;height:266px;width:100%;background:#4b494c;padding-top:140px;}
+	#detail h4,
+	#detail h3{text-align:center}
+	#detail h3{font-size:30px;color:#fff;margin-bottom:16px;}
+	#detail h4{font-size:22px;color:#9e9e9e;margin-bottom:38px;}
+	#detail .btn{width:322px;margin:0 auto;height:50px;}
+	#detail .btn button{background:url(../assets/notice.png) 0 0 no-repeat;height:100%;width:140px;outline:none;border:0;float:left;cursor:pointer;}
+	#detail .btn button:nth-child(2){background:url(../assets/private.png) 0 0 no-repeat;margin-left:42px;}
+	#detail .btn button:nth-child(1):hover{background:url(../assets/notice.png) 0 -50px no-repeat;}
+	#detail .btn button:nth-child(2):hover{background:url(../assets/private.png) 0 -50px no-repeat;}
+	#detail .tab{box-shadow:4px 0 30px rgba(51,51,51,.25);position:absolute;left:50%;transform:translateX(-50%);width:768px;height:64px;background:#f4f4f4;border-radius:10px;bottom:-32px;}
+	#detail .tab li{width:33%;text-align:center;line-height:64px;font-size:24px;color:#999;cursor:pointer;}
+	#detail .tab li.active{color:#4b494c;}
+	#index{width:1080px;margin:84px auto;padding-bottom:100px;overflow: hidden;}
+	#index ul{margin-bottom:40px;}
+	#index li{width:240px;height:268px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-right:28px;margin-bottom:20px;}
+	#index li .thumb{width:100%;height:130px;background:#999;position:relative;}
+	#index li .thumb>span{position:absolute;bottom:6px;right:8px;background:#666;display:inline-block;font-size:12px;height:18px;line-height:18px;padding:0 5px;border-radius:3px;}
+	#index li h3{font-size:19px;color:#333;height:80px;padding-top:26px;text-align:center;}
+	#index li p{background:url(../assets/good2.png) 80px center no-repeat;background-size:12px 10px;font-size:16px;color:#999;text-align:center;}
+	.others .left{width:340px;margin-right:20px;float: left;}
+	.others .left .liver{width:100%;min-height:350px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:22px;padding-top:30px;}
+	.others .left .liver>.avatar{margin:0 auto 22px;width:280px;height:154px;background:#999;border-radius: 10px;}
+	.others .left .liver>h4{font-size: 18px;color:#333;font-weight: normal;margin-bottom:30px;padding-left:30px;}
+	.others .left .liver>p{font-size: 16px;color:#666;font-weight: normal;margin-bottom:38px;padding-left:30px;}
+	.others .left .liver>a{font-size: 16px;color:#333;font-weight: normal;margin-bottom:20px;padding-right:30px;float: right;}
+	.others .left .otherlinks{width:100%;height:178px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
+	.others .left .otherlinks>h3{}
+	.others .left .assolivers{width:100%;height:288px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);}
+	.others .right{float: left;width:680px;box-shadow:2px 0 21px rgba(100,108,206,.24);background:#fff;min-height:100px;}
+</style>
+
+<script>
+	import { login, login2 } from '@/utils/http'
+
+	export default {
+		created(){
+			console.log("234")
+			this.get1()
+		},
+		mounted(){
+			console.log(123)
+		},
+		methods: {
+			async get1() {
+	      let res = await login({ liverid: 10 })
+	      console.log(res)
+	      this.user = res;
+	      
+	      // let parallelDataFetch = await Promise.all([
+	      //     login({ username: 'admin', password: 'dbadmin2018' }),
+	      //     login2({ username: 'admin', password: 'dbadmin2018' }),
+	      // ]);
+	      // console.log('Async parallel+fetch >>>', parallelDataFetch);
+	    }
+		},
+		data(){
+			return {
+				user: {}
+			}
+		}
+	}
+</script>
