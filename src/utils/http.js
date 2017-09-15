@@ -29,7 +29,7 @@ class Axios {
 	      url: url,
 	      method: 'post',
 	      headers: {
-	      	'Authorization': 'Bearer '+''
+	      	'Authorization': 'Bearer '
 	      },
 	      data,
 	    }
@@ -59,6 +59,12 @@ class Axios {
             status: false,
             message: '服务器接口异常'
           }
+        }
+        else if (e === '500') {
+          return {
+            status: false,
+            message: '内部服务器错误'
+          }
         }else{
         	return {
             status: false,
@@ -69,4 +75,4 @@ class Axios {
 	}
 }
 
-export const login = Axios.post('/live/livedetail')
+export const login = Axios.get('/live/recordlist')

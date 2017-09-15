@@ -121,16 +121,60 @@
         				</div>
         				<div class="otherlinks">
         					<h3>主播其他链接</h3>
+                            <div>
+                                <div><img src="" alt=""></div>
+                                <div><img src="" alt=""></div>
+                                <div><img src="" alt=""></div>
+                            </div>
         				</div>
         				<div class="assolivers"></div>
         		</div>
-        		<div class="right"></div>
+        		<div class="right">
+                    <div id="message">
+                        <textarea id="" placeholder="趁热留下你的评论..."></textarea>
+                        <button>发送</button>
+                    </div>     
+                    <hr> 
+                    <div class="msglist">
+                        <div class="msgitem">
+                            <div class="avatar"><img src="" alt=""></div>
+                            <div class="msgdetail">
+                                <div class="name">real__隔壁老胖兔<span>刚刚</span></div>
+                                <div class="content">看不见，滚</div>
+                                <div class="othermsg">
+                                    <p>筱雨起</p>
+                                    对了那个web还有几个超级复杂的动效要加，看到麻烦回复一下
+                                </div>
+                                <div class="reply">
+                                    <span>#1</span>
+                                    <span>回复</span>
+                                </div>
+                                <div class="message">
+                                    <textarea id="" placeholder="回复我，快~"></textarea>
+                                    <button>发送</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
         	</div>
         </div> 
     </div>
 </template>
 
 <style scoped>
+    .msgitem{margin:20px 20px 38px 46px;}
+    .msgitem .avatar{float:left;width:62px;height:62px;background: #999;border-radius: 100%;margin-right:30px;}
+    .msgitem .msgdetail{width:80%;}
+    .msgdetail>div{text-align: left;}
+    .msgdetail .name{font-size: 16px;color:#666;margin-bottom: 16px;}
+    .msgdetail .name span{color:#999;margin-left:16px;}
+    .msgdetail .content{font-size: 16px;color:#999;margin-bottom: 10px;}
+    .msgdetail .othermsg{font-size: 16px;color:#999;margin-bottom: 12px;background:#f4f4f4;margin-left: 92px;padding:12px 24px 16px 16px;border-radius: 2px;}
+    .msgdetail .othermsg p{color:#666;margin-bottom: 12px;}
+    .msgdetail .reply,.msgdetail .message{margin-left:92px;}
+    .msgdetail .reply span:nth-child(1){}
+    .msgdetail .reply span:nth-child(2){float: right}
 	ul,
 	li{list-style:none;float:left;}
 	a{text-decoration:none;color:#fff;}
@@ -176,6 +220,10 @@
 	.others .left .otherlinks>h3{}
 	.others .left .assolivers{width:100%;height:288px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);}
 	.others .right{float: left;width:680px;box-shadow:2px 0 21px rgba(100,108,206,.24);background:#fff;min-height:100px;}
+    .others .right #message{width:600px;margin:0 auto;overflow: hidden;}
+    .others .right  textarea{width:99%;height:74px;border:1px solid #d6d6d6;border-radius: 5px;margin-top:19px;resize:none;padding-top: 10px;text-indent: 14px;margin-bottom:10px;font-size: 16px;color:#999;}
+    .others .right button{float: right;width:50px;height:22px;background:#666;color:#fff;outline: none;border:0;border-radius: 2px;font-size: 12px;margin-bottom:10px;}
+    .others .right hr{    height: 1px;background: #f4f4f4;border: 0;}
 </style>
 
 <script>
@@ -191,7 +239,7 @@
 		},
 		methods: {
 			async get1() {
-	      let res = await login({ liverid: 10 })
+	      let res = await login({ 'uid': 1409 })
 	      console.log(res)
 	      this.user = res;
 	      
