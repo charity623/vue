@@ -173,7 +173,7 @@
     .msgdetail .othermsg{font-size: 16px;color:#999;margin-bottom: 12px;background:#f4f4f4;margin-left: 92px;padding:12px 24px 16px 16px;border-radius: 2px;}
     .msgdetail .othermsg p{color:#666;margin-bottom: 12px;}
     .msgdetail .reply,.msgdetail .message{margin-left:92px;}
-    .msgdetail .reply span:nth-child(1){}
+    /* .msgdetail .reply span:nth-child(1){} */
     .msgdetail .reply span:nth-child(2){float: right}
 	ul,
 	li{list-style:none;float:left;}
@@ -186,8 +186,8 @@
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
 	#cnt .cnt ul{width:50%;color:#000;font-size:20px;}
-	#cnt .cnt ul:nth-child(1) li{}
-	#cnt .cnt ul:nth-child(2) li{}
+	/* #cnt .cnt ul:nth-child(1) li{} */
+	/* #cnt .cnt ul:nth-child(2) li{} */
 	#cnt .cnt li{width:50%;text-align:center;display:inline-block;}
 	#cnt .avatar{z-index:1;width:216px;height:216px;background:#999;border-radius:100%;position:absolute;bottom:-108px;left:50%;transform:translateX(-50%);box-shadow:4px 0 30px rgba(51,51,51,.25)}
 	#detail{position:relative;height:266px;width:100%;background:#4b494c;padding-top:140px;}
@@ -217,7 +217,7 @@
 	.others .left .liver>p{font-size: 16px;color:#666;font-weight: normal;margin-bottom:38px;padding-left:30px;}
 	.others .left .liver>a{font-size: 16px;color:#333;font-weight: normal;margin-bottom:20px;padding-right:30px;float: right;}
 	.others .left .otherlinks{width:100%;height:178px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
-	.others .left .otherlinks>h3{}
+	/* .others .left .otherlinks>h3{} */
 	.others .left .assolivers{width:100%;height:288px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);}
 	.others .right{float: left;width:680px;box-shadow:2px 0 21px rgba(100,108,206,.24);background:#fff;min-height:100px;}
     .others .right #message{width:600px;margin:0 auto;overflow: hidden;}
@@ -228,14 +228,19 @@
 
 <script>
 	import { login, login2 } from '@/utils/http'
+	import { mapState, mapActions } from 'vuex'
 
 	export default {
 		created(){
-			console.log("234")
 			this.get1()
 		},
 		mounted(){
-			console.log(123)
+			console.log(this.route.params)
+		},
+		computed: {
+			...mapState({
+        route: state => state.route,
+      }),
 		},
 		methods: {
 			async get1() {
