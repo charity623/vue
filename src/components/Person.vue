@@ -235,7 +235,7 @@
 			this.get1()
 		},
 		mounted(){
-			console.log(this.route.params)
+			console.log(this.route.query.id)
 		},
 		computed: {
 			...mapState({
