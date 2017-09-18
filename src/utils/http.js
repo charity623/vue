@@ -28,11 +28,22 @@ class Axios {
 	  })
 	}
 	static post (url) {
-	  return (data,token) => Axios.connect({
+	  return (data, token) => Axios.connect({
 	      url: url,
 	      method: 'post',
 	      headers: {
-	      	'Authorization': 'Bearer '+token
+	      	'Authorization': 'Bearer '+ token
+	      },
+	      data,
+	    }
+	  )
+	}
+	static delete (url) {
+	  return (data, token) => Axios.connect({
+	      url: url,
+	      method: 'delete',
+	      headers: {
+	      	'Authorization': 'Bearer '+ token
 	      },
 	      data,
 	    }
@@ -42,13 +53,11 @@ class Axios {
 	  return axios(data)
 	    .then((response) => {
 	    	if(response.status == 200){
-	    		
 	    		if(response.data.error==0){
 	    			return response.data
 	    		} else {
 	    			console.log(response.data.desc)
 	    		}
-	        
 	    	}else{
 	    		if (response.status === 404) {
 	    		  throw '404'
@@ -60,24 +69,24 @@ class Axios {
 	    .catch((e) => {
 	      if (e === '404') {
           return {
-            status: false,
-            message: '接口地址不正确'
+            error: 404,
+            desc: '接口地址不正确'
           }
         } else if (e === '服务器接口异常') {
           return {
-            status: false,
-            message: '服务器接口异常'
+            error: false,
+            desc: '服务器接口异常'
           }
         }
         else if (e === '500') {
           return {
-            status: false,
-            message: '内部服务器错误'
+            error: false,
+            desc: '内部服务器错误'
           }
         }else{
         	return {
-            status: false,
-            message: '网络连接异常，请重试！'
+            error: false,
+            desc: '网络连接异常，请重试！'
           }
         }
 	    })

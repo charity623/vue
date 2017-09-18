@@ -50,7 +50,7 @@
         </div>
         <div id="index">
         	<ul>
-        		<li v-for="i in recordinfo">
+        		<li v-for="i in recordinfo" :key="i">
         			<a href="">
         				<div class="thumb">
         					<img v-bind:src="i.record_pic" alt="">
@@ -82,11 +82,11 @@
         		<div class="right">
                     <div id="message">
                         <textarea id="" placeholder="趁热留下你的评论..." v-model="text"></textarea>
-                        <button @click="sendMsg()">发送</button>
+                        <button @click="sendMsg()" :disabled="btnFlag">发送</button>
                     </div>     
                     <hr> 
                     <div class="msglist">
-                        <div class="msgitem" v-for="i in msglist">
+                        <div class="msgitem" v-for="i in msglist" :key="i">
                             <div class="avatar"><img v-bind:src="i.headimgurl" alt=""></div>
                             <div class="msgdetail">
                                 <div class="name">{{i.name}}<span>刚刚</span></div>
@@ -180,52 +180,61 @@
 </style>
 
 <script>
-	import { userinfo, recordlist,msglist,sendmsg } from '@/utils/http'
-	import { mapState, mapActions } from 'vuex'
-    import Tool from "../utils/Tool"
+import { userinfo, recordlist, msglist, sendmsg } from '@/utils/http'
+import { mapState, mapActions } from 'vuex'
+import Tool from "../utils/Tool"
 
-	export default {
-		created(){
-			this.getRecordlist();
-            this.getuserInfo();
-            this.getMsglist();
+export default {
+	created() {
+		this.getRecordlist();
+		// this.getuserInfo();
+		this.getMsglist();
+	},
+	mounted() {
+		// console.log(Tool.localItem("token"))
+	},
+	computed: {
+		...mapState({
+			route: state => state.route,
+		}),
+		shownRecord() {
+			// return this.recordinfo.slice(0, 7);
 		},
-		mounted(){
-			// console.log(Tool.localItem("token"))
+		btnFlag(){
+			return this.text.trim().length == 0;
+		}
+	},
+	methods: {
+		async getRecordlist() {
+			const res = await recordlist({ 'uid': this.route.query.id })
+			this.recordinfo = res.data;
+			const res2 = await userinfo('/user/detail/' + this.route.query.id)();
+			this.user = res2.data;
 		},
-		computed: {
-			...mapState({
-        route: state => state.route,
-      }),
+		async getMsglist() {
+			const res = await msglist({ 'liveuid': this.route.query.id }, Tool.localItem('token'));
+			this.msglist = res.data;
 		},
-		methods: {
-			async getRecordlist() {
-    	      let res = await recordlist({ 'uid': this.route.query.id })
-    	    
-    	      this.recordinfo = res.data;
-    	    },
-            async getuserInfo() {
-              const res = await userinfo('/user/detail/' + this.route.query.id)();
-              this.user = res.data;
-            },
-            async getMsglist() {
-              const res = await msglist({ 'liveuid': this.route.query.id }, Tool.localItem('token'));
-              this.msglist = res.data;
-
-            },
-            async sendMsg() {
-              const res = await sendmsg({ 'liveuid': this.route.query.id,'content': this.text}, Tool.localItem('token'))
-            }
-            
-		},
-		data(){
-			return {
-				recordinfo: {},
-                user:{},
-                text:'',
-                msglist:{}
-
+		async sendMsg() {
+			if (this.text.trim() == '') return false;
+			this.btnFlag = true;
+			const res = await sendmsg({ 'liveuid': this.route.query.id, 'content': this.text }, Tool.localItem('token'))
+			if (res.error != 0) {
+				this.btnFlag = false;
+			}else{
+				this.text = ''
+				this.getMsglist();
 			}
 		}
+
+	},
+	data() {
+		return {
+			recordinfo: {},
+			user: {},
+			text: '',
+			msglist: {}
+		}
 	}
+}
 </script>
