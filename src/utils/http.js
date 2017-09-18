@@ -18,18 +18,21 @@ axios.defaults.headers = {
 
 class Axios {
 	static get (url) {
-	  return data => Axios.connect({
+	  return (data,token) => Axios.connect({
 	    url: url,
 	    method: 'get',
+	    headers: {
+	      	'Authorization': 'Bearer '+token
+	      },
 	    params: data,
 	  })
 	}
 	static post (url) {
-	  return data => Axios.connect({
+	  return (data,token) => Axios.connect({
 	      url: url,
 	      method: 'post',
 	      headers: {
-	      	'Authorization': 'Bearer '
+	      	'Authorization': 'Bearer '+token
 	      },
 	      data,
 	    }
@@ -39,7 +42,13 @@ class Axios {
 	  return axios(data)
 	    .then((response) => {
 	    	if(response.status == 200){
-	        return response.data
+	    		
+	    		if(response.data.error==0){
+	    			return response.data
+	    		} else {
+	    			console.log(response.data.desc)
+	    		}
+	        
 	    	}else{
 	    		if (response.status === 404) {
 	    		  throw '404'
@@ -75,4 +84,8 @@ class Axios {
 	}
 }
 
-export const login = Axios.get('/live/recordlist')
+export const recordlist = Axios.get('/live/recordlist');//获取视频列表
+export const userinfo = Axios.get;//获取用户个人信息
+export const msglist = Axios.get('/live/messageboard');//获取留言板列表
+export const sendmsg = Axios.post('/live/messageboard');//发送留言
+

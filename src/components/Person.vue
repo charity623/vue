@@ -12,11 +12,11 @@
             <div class="cnt">
                 <ul>
                     <li>
-                        <p>18</p>
+                        <p>{{recordinfo.live_record_num}}</p>
                         <p>直播数</p>
                     </li>
                     <li>
-                        <p>26</p>
+                        <p>{{recordinfo.upload_record_num}}</p>
                         <p>视频数</p>
                     </li>
                 </ul>
@@ -32,12 +32,12 @@
                 </ul>
             </div>
             <div class="avatar">
-                <img src="" alt="">
+                <img v-bind:src="user.headimgurl" alt="">
             </div>
         </div>
         <div id="detail">
-            <h3>real__隔壁老胖兔</h3>
-            <h4>forget forgive future</h4>
+            <h3>{{user.name}}</h3>
+            <h4>ta只想安静的做一个路人，所以没有填写签名</h4>
             <div class="btn">
                 <button></button>
                 <button></button>
@@ -50,64 +50,14 @@
         </div>
         <div id="index">
         	<ul>
-        		<li>
+        		<li v-for="i in recordinfo">
         			<a href="">
         				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
+        					<img v-bind:src="i.record_pic" alt="">
+        					<span>{{i.duration}}</span>
         				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
-        			</a>
-        		</li>
-        		<li>
-        			<a href="">
-        				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
-        				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
-        			</a>
-        		</li>
-        		<li>
-        			<a href="">
-        				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
-        				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
-        			</a>
-        		</li>
-        		<li>
-        			<a href="">
-        				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
-        				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
-        			</a>
-        		</li>
-        		<li>
-        			<a href="">
-        				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
-        				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
-        			</a>
-        		</li>
-        		<li>
-        			<a href="">
-        				<div class="thumb">
-        					<img src="" alt="">
-        					<span>13:25</span>
-        				</div>
-        				<h3>你不知道的接头小吃</h3>
-        				<p>6666</p>
+        				<h3>{{i.title}}</h3>
+        				<p>{{i.like}}</p>
         			</a>
         		</li>
         	</ul>
@@ -131,22 +81,22 @@
         		</div>
         		<div class="right">
                     <div id="message">
-                        <textarea id="" placeholder="趁热留下你的评论..."></textarea>
-                        <button>发送</button>
+                        <textarea id="" placeholder="趁热留下你的评论..." v-model="text"></textarea>
+                        <button @click="sendMsg()">发送</button>
                     </div>     
                     <hr> 
                     <div class="msglist">
-                        <div class="msgitem">
-                            <div class="avatar"><img src="" alt=""></div>
+                        <div class="msgitem" v-for="i in msglist">
+                            <div class="avatar"><img v-bind:src="i.headimgurl" alt=""></div>
                             <div class="msgdetail">
-                                <div class="name">real__隔壁老胖兔<span>刚刚</span></div>
-                                <div class="content">看不见，滚</div>
+                                <div class="name">{{i.name}}<span>刚刚</span></div>
+                                <div class="content">{{i.content}}</div>
                                 <div class="othermsg">
                                     <p>筱雨起</p>
                                     对了那个web还有几个超级复杂的动效要加，看到麻烦回复一下
                                 </div>
                                 <div class="reply">
-                                    <span>#1</span>
+                                    <span>#{{i.floor}}</span>
                                     <span>回复</span>
                                 </div>
                                 <div class="message">
@@ -165,6 +115,7 @@
 <style scoped>
     .msgitem{margin:20px 20px 38px 46px;}
     .msgitem .avatar{float:left;width:62px;height:62px;background: #999;border-radius: 100%;margin-right:30px;}
+    .msgitem .avatar img{width:100%;height:100%;border-radius: 100%;}
     .msgitem .msgdetail{width:80%;}
     .msgdetail>div{text-align: left;}
     .msgdetail .name{font-size: 16px;color:#666;margin-bottom: 16px;}
@@ -190,6 +141,7 @@
 	/* #cnt .cnt ul:nth-child(2) li{} */
 	#cnt .cnt li{width:50%;text-align:center;display:inline-block;}
 	#cnt .avatar{z-index:1;width:216px;height:216px;background:#999;border-radius:100%;position:absolute;bottom:-108px;left:50%;transform:translateX(-50%);box-shadow:4px 0 30px rgba(51,51,51,.25)}
+    #cnt .avatar img{width: 100%; height: 100%;border-radius: 100%;}
 	#detail{position:relative;height:266px;width:100%;background:#4b494c;padding-top:140px;}
 	#detail h4,
 	#detail h3{text-align:center}
@@ -205,8 +157,9 @@
 	#detail .tab li.active{color:#4b494c;}
 	#index{width:1080px;margin:84px auto;padding-bottom:100px;overflow: hidden;}
 	#index ul{margin-bottom:40px;}
-	#index li{width:240px;height:268px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-right:28px;margin-bottom:20px;}
+	#index li{width:240px;height:268px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-right:28px;margin-bottom:20px;border-radius: 2px;}
 	#index li .thumb{width:100%;height:130px;background:#999;position:relative;}
+    #index li .thumb img{width:100%;height:100%;}
 	#index li .thumb>span{position:absolute;bottom:6px;right:8px;background:#666;display:inline-block;font-size:12px;height:18px;line-height:18px;padding:0 5px;border-radius:3px;}
 	#index li h3{font-size:19px;color:#333;height:80px;padding-top:26px;text-align:center;}
 	#index li p{background:url(../assets/good2.png) 80px center no-repeat;background-size:12px 10px;font-size:16px;color:#999;text-align:center;}
@@ -227,15 +180,18 @@
 </style>
 
 <script>
-	import { login, login2 } from '@/utils/http'
+	import { userinfo, recordlist,msglist,sendmsg } from '@/utils/http'
 	import { mapState, mapActions } from 'vuex'
+    import Tool from "../utils/Tool"
 
 	export default {
 		created(){
-			this.get1()
+			this.getRecordlist();
+            this.getuserInfo();
+            this.getMsglist();
 		},
 		mounted(){
-			console.log(this.route.query.id)
+			// console.log(Tool.localItem("token"))
 		},
 		computed: {
 			...mapState({
@@ -243,21 +199,32 @@
       }),
 		},
 		methods: {
-			async get1() {
-	      let res = await login({ 'uid': 1409 })
-	      console.log(res)
-	      this.user = res;
-	      
-	      // let parallelDataFetch = await Promise.all([
-	      //     login({ username: 'admin', password: 'dbadmin2018' }),
-	      //     login2({ username: 'admin', password: 'dbadmin2018' }),
-	      // ]);
-	      // console.log('Async parallel+fetch >>>', parallelDataFetch);
-	    }
+			async getRecordlist() {
+    	      let res = await recordlist({ 'uid': this.route.query.id })
+    	    
+    	      this.recordinfo = res.data;
+    	    },
+            async getuserInfo() {
+              const res = await userinfo('/user/detail/' + this.route.query.id)();
+              this.user = res.data;
+            },
+            async getMsglist() {
+              const res = await msglist({ 'liveuid': this.route.query.id }, Tool.localItem('token'));
+              this.msglist = res.data;
+
+            },
+            async sendMsg() {
+              const res = await sendmsg({ 'liveuid': this.route.query.id,'content': this.text}, Tool.localItem('token'))
+            }
+            
 		},
 		data(){
 			return {
-				user: {}
+				recordinfo: {},
+                user:{},
+                text:'',
+                msglist:{}
+
 			}
 		}
 	}
