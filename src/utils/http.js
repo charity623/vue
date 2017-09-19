@@ -53,7 +53,7 @@ class Axios {
 	  return axios(data)
 	    .then((response) => {
 	    	if(response.status == 200){
-	    		if(response.data.error==0){
+	    		if(response.data.error == 0){
 	    			return response.data
 	    		} else {
 	    			console.log(response.data.desc)

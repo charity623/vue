@@ -26,7 +26,7 @@ let historyCount = history.getItem('count') * 1 || 0
 history.setItem('/', 0)
 
 router.beforeEach(function (to, from, next) {
-  store.commit('updateLoadingStatus', {isLoading: true})
+  // store.commit('updateLoadingStatus', {isLoading: true})
 
   const toIndex = history.getItem(to.path)
   const fromIndex = history.getItem(from.path)

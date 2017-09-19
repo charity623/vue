@@ -12,21 +12,21 @@
             <div class="cnt">
                 <ul>
                     <li>
-                        <p>{{recordinfo.num.live_record_num}}</p>
+                        <p>{{num.live_record_num}}</p>
                         <p>直播数</p>
                     </li>
                     <li>
-                        <p>{{recordinfo.num.upload_record_num}}</p>
+                        <p>{{num.upload_record_num}}</p>
                         <p>视频数</p>
                     </li>
                 </ul>
                 <ul>
                     <li>
-                        <p>{{recordinfo.num.live_fans_num}}</p>
+                        <p>{{num.live_fans_num}}</p>
                         <p>粉丝数</p>
                     </li>
                     <li>
-                        <p>{{recordinfo.num.live_like_num}}</p>
+                        <p>{{num.live_like_num}}</p>
                         <p>点赞数</p>
                     </li>
                 </ul>
@@ -49,12 +49,12 @@
 
                 <li class="li-tab" v-for="(item,index) in tabsParam" 
         @click="toggleTabs(index)"
-        :class="{active:index==nowIndex}">{{item}}</li>
+        :class="{active:index==nowIndex}" :key="item">{{item}}</li>
             </ul>
         </div>
         <div class="common" id="index" v-show="nowIndex===0">
         	<ul>
-        		<li v-for="i in recordinfo.data.slice(0,8)" :key="i">
+        		<li v-for="i in slicedRecordInfo" :key="i">
         			<a href="">
         				<div class="thumb">
         					<img v-bind:src="i.record_pic" alt="">
@@ -90,7 +90,7 @@
                     </div>     
                     <hr> 
                     <div class="msglist">
-                        <div class="msgitem" v-for="i in msglist" :key="i">
+                        <div class="msgitem" v-for="(i, index) in msglist" :key="i">
                             <div class="avatar"><img v-bind:src="i.headimgurl" alt=""></div>
                             <div class="msgdetail">
                                 <div class="name">{{i.name}}<span>{{}}</span></div>
@@ -101,9 +101,9 @@
                                 </div>
                                 <div class="reply">
                                     <span>#{{i.floor}}</span>
-                                    <span>回复</span>
+                                    <span @click="curIndex = index">回复</span>
                                 </div>
-                                <div class="message">
+                                <div class="message" v-show="index == curIndex">
                                     <textarea id="" placeholder="回复我，快~"></textarea>
                                     <button>发送</button>
                                 </div>
@@ -115,7 +115,7 @@
         </div> 
         <div class="common" id="videolist" v-show="nowIndex===1">
             <ul>
-                <li v-for="i in recordinfo.data" :key="i">
+                <li v-for="i in recordinfo" :key="i">
                     <a href="">
                         <div class="thumb">
                             <img v-bind:src="i.record_pic" alt="">
@@ -245,23 +245,24 @@ export default {
 		...mapState({
 			route: state => state.route,
 		}),
-		shownRecord() {
-			// return this.recordinfo.slice(0, 7);
-		},
 		btnFlag(){
 			return this.text.trim().length == 0;
-		}
+        },
+        slicedRecordInfo(){
+            return this.recordinfo.slice(0,8)
+        }
 	},
 	methods: {
 		async init() {
 			const res = await recordlist({ 'uid': this.route.query.id })
-			this.recordinfo = res;
+            this.recordinfo = res.data;
+            this.num = res.num;
 			const res2 = await userinfo('/user/detail/' + this.route.query.id)();
 			this.user = res2.data;
 		},
 		async getMsglist() {
-			const res = await msglist({ 'liveuid': this.route.query.id,'offset':0}, Tool.localItem('token'));
-			this.msglist = res.data;
+			const res = await msglist({ 'liveuid': this.route.query.id,'offset':this.recordOffset}, Tool.localItem('token'));
+            this.msglist = res.data;
 		},
 		async sendMsg() {
 			if (this.text.trim() == '') return false;
@@ -274,19 +275,21 @@ export default {
 				this.getMsglist();
 			}
 		},
-        toggleTabs:function(index){
+        toggleTabs(index){
             this.nowIndex=index;
         },
-
 	},
 	data() {
 		return {
-			recordinfo: {},
+            recordinfo: [],
+            num: {},
 			user: {},
 			text: '',
 			msglist: {},
             tabsParam:['主页','视频','资料'],//（这个也可以用对象key，value来实现）
-            nowIndex:2,//默认第一个tab为激活状态
+            nowIndex:0,//默认第一个tab为激活状态
+            curIndex: -1,
+            recordOffset:0
 		}
 	}
 }
