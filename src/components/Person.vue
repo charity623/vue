@@ -67,21 +67,57 @@
         	</ul>
         	<div class="others">
         		<div class="left">
-        				<div class="liver">
-        					<div class="avatar"><img src="" alt=""></div>
-        					<h4>病毒猎人同人小说</h4>
-        					<p>玩的666666666666</p>
-        					<a href="">前往直播间>></a>
-        				</div>
-        				<div class="otherlinks">
-        					<h3>主播其他链接</h3>
-                            <div>
-                                <div><img src="" alt=""></div>
-                                <div><img src="" alt=""></div>
-                                <div><img src="" alt=""></div>
+                    <div v-if="user.type==5">
+                        <div class="liver">
+                            <div class="avatar"><img v-bind:src="user.thumb" alt=""></div>
+                            <h4>{{user.title}}</h4>
+                            <p>{{user.description}}</p>
+                            <a href="">前往直播间>></a>
+                        </div>
+                        <div class="otherlinks">
+                            <h3>主播其他链接</h3>
+                            <div class="linklist">
+                                <div class="weibo"></div>
+                                <div class="douban"></div>
+                                <div class="taobao"></div>
                             </div>
-        				</div>
-        				<div class="assolivers"></div>
+                        </div>
+                        <div class="assolivers">
+                            <h3>关联主播</h3>
+                            <div class="assolist" >
+                                <div class="assoitem" v-for="i in assolist" :key="i">
+                                    <img v-bind:src="i.headimgurl" alt="">
+                                    <p>{{i.name}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="visitors">
+                        <h3>访客记录</h3>
+                        <div class="visitorlist" >
+                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                                <img v-bind:src="i.headimgurl" alt="">
+                                <p>{{i.name}}</p>
+                            </div>
+                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                                <img v-bind:src="i.headimgurl" alt="">
+                                <p>{{i.name}}</p>
+                            </div>
+                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                                <img v-bind:src="i.headimgurl" alt="">
+                                <p>{{i.name}}</p>
+                            </div>
+                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                                <img v-bind:src="i.headimgurl" alt="">
+                                <p>{{i.name}}</p>
+                            </div>
+                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                                <img v-bind:src="i.headimgurl" alt="">
+                                <p>{{i.name}}</p>
+                            </div>
+                        </div>
+                    </div>
+        				
         		</div>
         		<div class="right">
                     <div id="message">
@@ -95,17 +131,17 @@
                             <div class="msgdetail">
                                 <div class="name">{{i.name}}<span>{{}}</span></div>
                                 <div class="content">{{i.content}}</div>
-                                <div class="othermsg" v-if="i.recall.length!=0">
-                                    <p>筱雨起</p>
-                                    对了那个web还有几个超级复杂的动效要加，看到麻烦回复一下
+                                <div class="othermsg" v-if="i.recall!=null">
+                                    <p>{{i.recall.name}}</p>
+                                    {{i.recall.content}}
                                 </div>
                                 <div class="reply">
                                     <span>#{{i.floor}}</span>
                                     <span @click="curIndex = index">回复</span>
                                 </div>
                                 <div class="message" v-show="index == curIndex">
-                                    <textarea id="" placeholder="回复我，快~"></textarea>
-                                    <button>发送</button>
+                                    <textarea id="" placeholder="回复我，快~" v-model="text"></textarea>
+                                    <button @click="sendMsg(i)" :disabled="btnFlag">发送</button>
                                 </div>
                             </div>
                         </div>
@@ -156,11 +192,6 @@
 </template>
 
 <style scoped>
-    .userPanel{width:698px;height:474px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);border-radius: 2px;margin:0 auto;padding-left:70px;}
-    .userPanel h4{font-size: 18px;color:#333;text-align: left;padding-top:32px;margin-bottom:72px;font-weight: bold;}
-    .userPanel ul{width: 100%;}
-    .userPanel li{float:none;font-size: 18px;color:#333;text-align: left;margin-bottom:32px;}
-    .userPanel li span:nth-child(1){width:112px;text-align: left;display: inline-block;}
 
 	ul,
 	li{list-style:none;float:left;}
@@ -168,7 +199,7 @@
 	.container{min-width:1200px;}
 	header{height:70px;background:#333;}
 	header ul{float:left;font-size:22px;}
-	header ul li{float:left;margin-left:110px;line-height:70px;color:fff;}
+	header ul li{float:left;margin-left:110px;line-height:70px;color:#fff;}
 	#cnt{position:relative;font-size:0;}
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
@@ -202,12 +233,29 @@
 	.others .left{width:340px;margin-right:20px;float: left;}
 	.others .left .liver{width:100%;min-height:350px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:22px;padding-top:30px;}
 	.others .left .liver>.avatar{margin:0 auto 22px;width:280px;height:154px;background:#999;border-radius: 10px;}
+    .others .left .liver>.avatar img{width:100%;height:100%;border-radius: 10px;}
 	.others .left .liver>h4{font-size: 18px;color:#333;font-weight: normal;margin-bottom:30px;padding-left:30px;}
 	.others .left .liver>p{font-size: 16px;color:#666;font-weight: normal;margin-bottom:38px;padding-left:30px;}
 	.others .left .liver>a{font-size: 16px;color:#333;font-weight: normal;margin-bottom:20px;padding-right:30px;float: right;}
 	.others .left .otherlinks{width:100%;height:178px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
-	/* .others .left .otherlinks>h3{} */
-	.others .left .assolivers{width:100%;height:288px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);}
+	.others .left .otherlinks>h3{font-size: 16px;color:#333;margin:0 auto 36px;padding-top:20px;font-weight:bold;} 
+    .others .left .otherlinks .linklist{width:264px;margin:0 auto;overflow: hidden;}
+    .others .left .otherlinks .linklist>div{width:60px;height:60px;float: left;margin-right:42px;}
+    .others .left .otherlinks .linklist>div.weibo{background:url(../assets/weibo.png) 0 0 no-repeat;}
+    .others .left .otherlinks .linklist>div.douban{background:url(../assets/douban.png) 0 0px no-repeat;}
+    .others .left .otherlinks .linklist>div.taobao{margin:0;background:url(../assets/taobao.png) 0 0px no-repeat;}
+	.others .left .assolivers{background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
+    .others .left .assolivers .assolist{width:318px;padding:20px 11px 0;overflow: hidden;}
+    .others .left .assolivers >h3{font-size: 16px;color:#333;margin:0 auto;padding-top:20px;font-weight:bold;} 
+    .others .left .assolivers .assolist .assoitem{width:62px;margin:0 19px 18px;float: left;}
+    .others .left .assolivers .assolist .assoitem img{width:62px;height:62px;border-radius: 100%;background:#999;}
+    .others .left .assolivers .assolist .assoitem p{font-size: 16px;color:#666;text-align: center;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    .others .left .visitors{background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
+    .others .left .visitors h3{font-size: 16px;color:#333;font-weight: bold;padding-top:20px;padding-left:30px;text-align: left;}
+    .others .left .visitors .visitorlist{width:304px;padding:20px 17px 0;overflow: hidden;}
+    .others .left .visitors .visitoritem{width:50px;margin:0px 13px 22px;float: left;}
+    .others .left .visitors .visitoritem img{width:50px;height:50px;background:#999;border-radius: 100%;}
+    .others .left .visitors .visitoritem p{font-size: 13px;color:#666;}
 	.others .right{float: left;width:680px;box-shadow:2px 0 21px rgba(100,108,206,.24);background:#fff;min-height:100px;}
     .others .right #message{width:600px;margin:0 auto;overflow: hidden;}
     .others .right  textarea{width:99%;height:74px;border:1px solid #d6d6d6;border-radius: 5px;margin-top:19px;resize:none;padding-top: 10px;text-indent: 14px;margin-bottom:10px;font-size: 16px;color:#999;}
@@ -226,10 +274,16 @@
     .msgdetail .reply,.msgdetail .message{margin-left:92px;}
     /* .msgdetail .reply span:nth-child(1){} */
     .msgdetail .reply span:nth-child(2){float: right}
+    .userPanel{width:698px;height:474px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);border-radius: 2px;margin:0 auto;padding-left:70px;}
+    .userPanel h4{font-size: 18px;color:#333;text-align: left;padding-top:32px;margin-bottom:72px;font-weight: bold;}
+    .userPanel ul{width: 100%;}
+    .userPanel li{float:none;font-size: 18px;color:#333;text-align: left;margin-bottom:32px;}
+    .userPanel li span:nth-child(1){width:112px;text-align: left;display: inline-block;}
+
 </style>
 
 <script>
-import { userinfo, recordlist, msglist, sendmsg } from '@/utils/http'
+import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -254,25 +308,47 @@ export default {
 	},
 	methods: {
 		async init() {
+            //获取视频列表
 			const res = await recordlist({ 'uid': this.route.query.id })
             this.recordinfo = res.data;
             this.num = res.num;
+            //获取用户信息
 			const res2 = await userinfo('/user/detail/' + this.route.query.id)();
 			this.user = res2.data;
+            console.log(this.user.type)
+            //关联主播列表
+            const res4 = await getAssocbylid({ 'uid': this.route.query.id })
+            this.assolist = res4.data;
+            //添加访客记录
+            const res3 = await addVisitorhis({ 'liveuid': this.route.query.id}, Tool.localItem('token'));
+
+
 		},
 		async getMsglist() {
 			const res = await msglist({ 'liveuid': this.route.query.id,'offset':this.recordOffset}, Tool.localItem('token'));
             this.msglist = res.data;
 		},
-		async sendMsg() {
+		async sendMsg(i) {
+            console.log(arguments.length)
 			if (this.text.trim() == '') return false;
+            const msgObj= {
+                'liveuid': this.route.query.id,
+                'content': this.text 
+            }
+            if(arguments.length!=0){
+                
+                    msgObj.with=i.id;
+                
+            }
+            
 			this.btnFlag = true;
-			const res = await sendmsg({ 'liveuid': this.route.query.id, 'content': this.text }, Tool.localItem('token'))
+			const res = await sendmsg(msgObj, Tool.localItem('token'))
 			if (res.error != 0) {
 				this.btnFlag = false;
 			}else{
 				this.text = ''
 				this.getMsglist();
+                this.curIndex = -1;
 			}
 		},
         toggleTabs(index){
@@ -289,7 +365,8 @@ export default {
             tabsParam:['主页','视频','资料'],//（这个也可以用对象key，value来实现）
             nowIndex:0,//默认第一个tab为激活状态
             curIndex: -1,
-            recordOffset:0
+            recordOffset:0,
+            assolist:{}
 		}
 	}
 }
