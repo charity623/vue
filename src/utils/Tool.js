@@ -54,25 +54,116 @@ export default {
 		}
 		return localStorage.removeItem();
 	},
-	formatDate(time) {
+	formatDate(timeStamp) {
 		// var date = new Date(str.replace(/-/g, '/'));
-		// var time = new Date().getTime() - date.getTime(); //现在的时间-传入的时间 = 相差的时间（单位 = 毫秒）
-		
+		var time = Date.now() - timeStamp; //现在的时间-传入的时间 = 相差的时间（单位 = 毫秒）
 		if (time < 0) {
 			return '---';
 		} else if (time / 1000 < 60) {
 			return '刚刚';
 		} else if ((time / 60000) < 60) {
-			return parseInt((time / 60000)) + '分钟';
+			return parseInt((time / 60000)) + '分钟前';
 		} else if ((time / 3600000) < 24) {
-			return parseInt(time / 3600000) + '小时';
+			return parseInt(time / 3600000) + '小时前';
 		} else if ((time / 86400000) < 31) {
-			return parseInt(time / 86400000) + '天';
+			return parseInt(time / 86400000) + '天前';
 		} else if ((time / 2592000000) < 12) {
 			return parseInt(time / 2592000000) + '月';
 		} else {
 			return parseInt(time / 31536000000) + '年';
 		}
+	},
+	unixToDate(time) {
+		var unixtime = time * 1000;
+		var date = new Date(unixtime);
+		var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+		var hh = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+		var mm = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+		var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+		return date.getFullYear() + "/" + month + "/" + currentDate + " " + hh + ":" + mm + ":" + ss;
+		//返回格式：yyyy-MM-dd
+	},
+	getTheTime(time) {
+		var now = this.getUnix(); //当前时间戳
+		var today = this.getToday(); //今天0点时间戳
+		var year = this.getYear(); //今年0点时间戳
+		var timer = now - time;
+		var tip = '';
+		if (timer < 3600) {
+			var min = Math.floor(timer / 60);
+			if(min <= 0){
+				tip = '刚刚';
+			}else{
+				tip = Math.floor(timer / 60) + '分钟前';
+			}
+		} else if (timer >= 3600 && (time - today >= 0)) {
+			tip = Math.floor(timer / 3600) + '小时前';
+		} else if (time - today < 0 && (time - year >= 0)) {
+			tip = this.getLastDate(time, 'month');
+		} else {
+			tip = this.getLastDate(time, 'year');
+		};
+		return tip;
+	},
+	getLastDate(time, type) {
+		var unixtime = time * 1000;
+		var date = new Date(unixtime);
+		var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+		var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+		var hh = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+		var mm = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+		if (type == 'month') {
+			return month + "-" + currentDate + ' ' + hh + ':' + mm;
+		} else {
+			// return date.getFullYear() + '-' + month + "-" + currentDate + ' ' + hh + ':' + mm;
+			return hh + ':' + mm;
+		};
+	},
+	getYear() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = 0;
+		var day = 1;
+		var hours = 0;
+		var mins = 0;
+		var secs = 0;
+		var datetime = year + '-' + month + '-' + day + ' ' + hours + ':' + mins + ':' + secs;
+		var tmp_datetime = datetime.replace(/:/g, '-');
+		tmp_datetime = tmp_datetime.replace(/ /g, '-');
+		var arr = tmp_datetime.split("-");
+		var now = new Date(Date.UTC(arr[0], arr[1] - 1, arr[2], arr[3] - 8, arr[4], arr[5]));
+		return parseInt(now.getTime() / 1000);
+	},
+	getToday() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = today.getMonth() + 1;
+		var day = today.getDate();
+		var hours = 0;
+		var mins = 0;
+		var secs = 0;
+		var datetime = year + '-' + month + '-' + day + ' ' + hours + ':' + mins + ':' + secs;
+		var tmp_datetime = datetime.replace(/:/g, '-');
+		tmp_datetime = tmp_datetime.replace(/ /g, '-');
+		var arr = tmp_datetime.split("-");
+		var now = new Date(Date.UTC(arr[0], arr[1] - 1, arr[2], arr[3] - 8, arr[4], arr[5]));
+		return parseInt(now.getTime() / 1000);
+	},
+	getUnix() {
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = today.getMonth() + 1;
+		var day = today.getDate();
+		var hours = today.getHours();
+		var mins = today.getMinutes();
+		var secs = today.getSeconds();
+		var datetime = year + '-' + month + '-' + day + ' ' + hours + ':' + mins + ':' + secs;
+		var tmp_datetime = datetime.replace(/:/g, '-');
+		tmp_datetime = tmp_datetime.replace(/ /g, '-');
+		var arr = tmp_datetime.split("-");
+		var now = new Date(Date.UTC(arr[0], arr[1] - 1, arr[2], arr[3] - 8, arr[4], arr[5]));
+		return parseInt(now.getTime() / 1000);
 	},
 	paramType(data){
     // data['token'] = 'pt';

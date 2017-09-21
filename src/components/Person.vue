@@ -105,7 +105,7 @@
         		</div>
         		<div class="right">
                     <div id="message">
-                        <textarea id="" placeholder="趁热留下你的评论..." v-model="text"></textarea>
+                        <textarea id="" placeholder="趁热留下你的评论..." @focus="onFocus" v-model="text"></textarea>
                         <button @click="sendMsg()" :disabled="btnFlag">发送</button>
                     </div>     
                     <hr> 
@@ -113,7 +113,7 @@
                         <div class="msgitem" v-for="(i, index) in msglist" :key="i">
                             <div class="avatar"><img v-bind:src="i.headimgurl" alt=""></div>
                             <div class="msgdetail">
-                                <div class="name">{{i.name}}<span>{{}}</span></div>
+                                <div class="name">{{i.name}}<span>{{publishDate(i.time)}}</span></div>
                                 <div class="content">{{i.content}}</div>
                                 <div class="othermsg" v-if="i.recall!=null">
                                     <p>{{i.recall.name}}</p>
@@ -124,8 +124,8 @@
                                     <span @click="curIndex = index">回复</span>
                                 </div>
                                 <div class="message" v-show="index == curIndex">
-                                    <textarea id="" placeholder="回复我，快~" v-model="text"></textarea>
-                                    <button @click="sendMsg(i)" :disabled="btnFlag">发送</button>
+                                    <textarea id="" placeholder="回复我，快~" v-model="subText"></textarea>
+                                    <button @click="sendMsg(i)" :disabled="subBtnFlag">发送</button>
                                 </div>
                             </div>
                         </div>
@@ -211,16 +211,18 @@
 	a{text-decoration:none;color:#fff;}
 	.container{min-width:1200px;}
 	header{height:70px;background:#333;}
-	header ul{float:left;font-size:22px;}
-	header ul li{float:left;margin-left:110px;line-height:70px;color:#fff;}
+	header ul{float:none;font-size:22px;width:465px;margin: auto}
+	header ul li{float:left;padding:0 55px;line-height:70px;color:#fff;}
 	#cnt{position:relative;font-size:0;}
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
-	#cnt .cnt ul{width:50%;color:#000;font-size:20px;}
+	#cnt .cnt ul{width:40%;color:#000;font-size:20px;}
+	#cnt .cnt ul:nth-child(1){float: left}
+	#cnt .cnt ul:nth-child(2){float: right}
 	/* #cnt .cnt ul:nth-child(1) li{} */
 	/* #cnt .cnt ul:nth-child(2) li{} */
 	#cnt .cnt li{width:50%;text-align:center;display:inline-block;}
-	#cnt .avatar{z-index:1;width:216px;height:216px;background:#999;border-radius:100%;position:absolute;bottom:-108px;left:50%;transform:translateX(-50%);box-shadow:4px 0 30px rgba(51,51,51,.25)}
+	#cnt .avatar{z-index:1;width:170px;height:170px;background:#999;border-radius:100%;position:absolute;bottom:-90px;left:50%;transform:translateX(-50%);box-shadow:4px 0 30px rgba(51,51,51,.25)}
     #cnt .avatar img{width: 100%; height: 100%;border-radius: 100%;}
 	#detail{position:relative;height:266px;width:100%;background:#4b494c;padding-top:140px;}
 	#detail h4,
@@ -320,7 +322,7 @@ export default {
         this.getRecordlist();
 	},
 	mounted() {
-		// console.log(Tool.localItem("token")
+		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA2MDA2NzcxLCJleHAiOjE1MDYyNjU5NzEsIm5iZiI6MTUwNjAwNjc3MSwianRpIjoiOWYxZmJjMDRkMTE2NjU3ODkwYzE3YzZmNzY0M2Q1OTEifQ.wNW5BePBQqfkEE9KRaw9a2Qz1iRgbL_I4q32KGotf5g"))
 	},
 	computed: {
 		...mapState({
@@ -328,6 +330,9 @@ export default {
 		}),
 		btnFlag(){
 			return this.text.trim().length == 0;
+        },
+		subBtnFlag(){
+			return this.subText.trim().length == 0;
         },
         slicedRecordInfo(){
             return this.recordinfo.slice(0,8)
@@ -342,7 +347,7 @@ export default {
             //获取用户信息
 			const res2 = await userinfo('/user/detail/' + this.route.query.id)();
 			this.user = res2.data;
-            console.log(this.user.type)
+            // console.log(this.user.type)
             //关联主播列表
             const res4 = await getAssocbylid({ 'uid': this.route.query.id })
             this.assolist = res4.data;
@@ -354,11 +359,14 @@ export default {
 
 		},
 		async getMsglist() {
-			const res = await msglist({ 'liveuid': this.route.query.id,'offset':this.recordOffset}, Tool.localItem('token'));
-            this.newmsglist = res.data;
-           
-             for (var i = 0; i < res.data.length; i++) {
-                 this.msglist.push(this.newmsglist[i]);
+            const res = await msglist({ 'liveuid': this.route.query.id,'offset':this.recordOffset}, Tool.localItem('token'));
+            const newmsglist = res.data;
+            if(this.recordOffset == 0){
+                this.msglist = newmsglist
+            }else{
+                for (var i = 0; i < res.data.length; i++) {
+                    this.msglist.push(newmsglist[i]);
+                }
             }
             if(res.data.length==10){
                 this.recordOffset++;
@@ -384,21 +392,23 @@ export default {
 
         },
 		async sendMsg(i) {
-            console.log(arguments.length)
-			if (this.text.trim() == '') return false;
-            const msgObj= {
+            // console.log(arguments.length)
+            let msgObj= {
                 'liveuid': this.route.query.id,
-                'content': this.text 
+                'content': this.text.trim()
             }
-            if(arguments.length!=0){
-                msgObj.with=i.id;
+            if(arguments.length != 0){
+                msgObj.with = i.id;
+                msgObj.content = this.subText.trim();
             }
+			if (msgObj.content == '') return false;
 			this.btnFlag = true;
 			const res = await sendmsg(msgObj, Tool.localItem('token'))
 			if (res.error != 0) {
 				this.btnFlag = false;
 			}else{
-				this.text = ''
+                this.text = ''
+                this.recordOffset = 0;
 				this.getMsglist();
                 this.curIndex = -1;
 			}
@@ -406,6 +416,12 @@ export default {
         toggleTabs(index){
             this.nowIndex=index;
         },
+        publishDate(time){
+            return Tool.getTheTime(parseInt(time));
+        },
+        onFocus(){
+            this.curIndex = -1;
+        }
 	},
 	data() {
 		return {
@@ -413,6 +429,7 @@ export default {
             num: {},
 			user: {},
 			text: '',
+			subText: '',
 			msglist: [],
             tabsParam:['主页','视频','资料'],//（这个也可以用对象key，value来实现）
             nowIndex:0,//默认第一个tab为激活状态
@@ -422,7 +439,6 @@ export default {
             visitorlist:{},
             recordlist:[],
             loadmoreMsg:false,
-            newmsglist:[],
             loadmoreVideo:false,
             videoOffset:0,
             newrecordlist:[]
