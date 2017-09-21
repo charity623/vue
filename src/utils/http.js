@@ -98,6 +98,7 @@ export const userinfo = Axios.get;//获取用户个人信息
 export const msglist = Axios.get('/live/messageboard');//获取留言板列表
 export const sendmsg = Axios.post('/live/messageboard');//发送留言
 export const addVisitorhis = Axios.post('/user/addvisitorhis');//添加访客记录
+export const getVisitorhis = Axios.post('/user/visitorhis');//获取访客列表
 export const getAssocbylid = Axios.post('/live/getassocbylid');//根据uid查询主播关联主播
 
 

@@ -95,23 +95,7 @@
                     <div class="visitors">
                         <h3>访客记录</h3>
                         <div class="visitorlist" >
-                            <div class="visitoritem" v-for="i in assolist" :key="i">
-                                <img v-bind:src="i.headimgurl" alt="">
-                                <p>{{i.name}}</p>
-                            </div>
-                            <div class="visitoritem" v-for="i in assolist" :key="i">
-                                <img v-bind:src="i.headimgurl" alt="">
-                                <p>{{i.name}}</p>
-                            </div>
-                            <div class="visitoritem" v-for="i in assolist" :key="i">
-                                <img v-bind:src="i.headimgurl" alt="">
-                                <p>{{i.name}}</p>
-                            </div>
-                            <div class="visitoritem" v-for="i in assolist" :key="i">
-                                <img v-bind:src="i.headimgurl" alt="">
-                                <p>{{i.name}}</p>
-                            </div>
-                            <div class="visitoritem" v-for="i in assolist" :key="i">
+                            <div class="visitoritem" v-for="i in visitorlist" :key="i">
                                 <img v-bind:src="i.headimgurl" alt="">
                                 <p>{{i.name}}</p>
                             </div>
@@ -146,12 +130,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="loadmore" v-show="loadmoreMsg" @click="getMsglist()">
+                        加载更多留言
+                    </div>
                 </div>
         	</div>
         </div> 
         <div class="common" id="videolist" v-show="nowIndex===1">
             <ul>
-                <li v-for="i in recordinfo" :key="i">
+                <li v-for="i in recordlist" :key="i">
                     <a href="">
                         <div class="thumb">
                             <img v-bind:src="i.record_pic" alt="">
@@ -162,6 +149,9 @@
                     </a>
                 </li>
             </ul>
+            <div class="loadmoreVideo" v-show="loadmoreVideo" @click="getRecordlist()">
+                加载更多
+            </div>
         </div>
         <div class="common" id="userdetail" v-show="nowIndex===2">
            <div class="userPanel">
@@ -188,11 +178,34 @@
                </ul>
            </div>
         </div>
+        <footer>
+            <div class="top">
+                <img src="../assets/blurb.png" alt="">
+                <ul>
+                    <h4>联系我们</h4>
+                    <li><a href="">项目/职位咨询：markmo@tianyantv.com</a></li>
+                    <li><a href="">内容、品牌合作：hefan@tianyantv.com</a></li>
+                    <li><a href="">产品建议/问题反馈：chengyuan@tianyantv.com</a></li>
+                </ul>
+                <ul>
+                    <h4>常见问题</h4>
+                    <li><a href="">如何成为主播</a></li>
+                    <li><a href="">如何开播</a></li>
+                    <li><a href="">其他使用问题</a></li>
+                </ul>
+            </div>
+            <p></p>
+            <div class="bottom">
+                <a href="http://weibo.com/u/5815791757?refer_flag=1001030001_&amp;nick=%E5%A4%A9%E7%9C%BC%E9%80%9A%E8%A7%86%E9%A2%91&amp;is_hot=1"><img src="../assets/weibo_list.png" alt=""></a>
+                <p>Copyright&nbsp;2015-2017&nbsp;天眼通&nbsp;All Rights Reserved &gt;京ICP备16002486号</p>
+            </div>
+        </footer>
     </div>
 </template>
 
 <style scoped>
-
+    .loadmore{width:100%;height:74px;border-top:1px solid #ededed;line-height: 74px;font-size: 16px;color:#333;cursor: pointer;}
+    .loadmoreVideo{width:100%;margin:42px auto 58px;color:#666;font-size: 24px;cursor: pointer;}
 	ul,
 	li{list-style:none;float:left;}
 	a{text-decoration:none;color:#fff;}
@@ -279,11 +292,24 @@
     .userPanel ul{width: 100%;}
     .userPanel li{float:none;font-size: 18px;color:#333;text-align: left;margin-bottom:32px;}
     .userPanel li span:nth-child(1){width:112px;text-align: left;display: inline-block;}
-
+     footer{width:100%;background:#fff;margin-top:30px;}
+     footer>div{width:1200px;margin:0 auto;}
+     footer .top{height:174px;}
+     footer .top img{margin-top:20px;margin-right:72px;}
+     footer .top ul{float:right;margin-top:40px;}
+     footer .top ul:nth-child(3){margin-right:100px;}
+     footer .top ul h4{font-size:15px;color:#333;margin-bottom:12px;text-align: left;}
+     footer .top ul li{font-size:14px;color:#999;margin-bottom:6px;float: none;text-align: left;}
+     footer .top ul li a{color:#999;}
+     footer>p{height:1px;background:#e0e0e0;width:100%;}
+     footer .bottom{height:35px;}
+     footer .bottom a{width:20px;height:17px;float: left;margin-left: 135px;}
+     footer .bottom img{width:20px;height:17px;margin-top:8px;}
+     footer .bottom p{float:right;line-height:35px;display:inline-block;font-size:12px;color:#666;}
 </style>
 
 <script>
-import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid} from '@/utils/http'
+import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -291,6 +317,7 @@ export default {
 	created() {
 		this.init();
 		this.getMsglist();
+        this.getRecordlist();
 	},
 	mounted() {
 		// console.log(Tool.localItem("token")
@@ -321,13 +348,41 @@ export default {
             this.assolist = res4.data;
             //添加访客记录
             const res3 = await addVisitorhis({ 'liveuid': this.route.query.id}, Tool.localItem('token'));
-
+            //获取访客列表
+            const res5 = await getVisitorhis({ 'liveuid': this.route.query.id,size:32 })
+            this.visitorlist = res5.data;
 
 		},
 		async getMsglist() {
 			const res = await msglist({ 'liveuid': this.route.query.id,'offset':this.recordOffset}, Tool.localItem('token'));
-            this.msglist = res.data;
+            this.newmsglist = res.data;
+           
+             for (var i = 0; i < res.data.length; i++) {
+                 this.msglist.push(this.newmsglist[i]);
+            }
+            if(res.data.length==10){
+                this.recordOffset++;
+                this.loadmoreMsg = true;
+            } else {
+                this.loadmoreMsg = false;
+            }
 		},
+        async getRecordlist() {
+            const res = await recordlist({ 'uid': this.route.query.id ,size:12,'offset':this.videoOffset})
+
+            this.newrecordlist = res.data;
+
+            for (var i = 0; i < res.data.length; i++) {
+                 this.recordlist.push(this.newrecordlist[i]);
+            }
+            if(res.data.length==12){
+                this.videoOffset++;
+                this.loadmoreVideo = true;
+            } else {
+                this.loadmoreVideo = false;
+            }
+
+        },
 		async sendMsg(i) {
             console.log(arguments.length)
 			if (this.text.trim() == '') return false;
@@ -336,11 +391,8 @@ export default {
                 'content': this.text 
             }
             if(arguments.length!=0){
-                
-                    msgObj.with=i.id;
-                
+                msgObj.with=i.id;
             }
-            
 			this.btnFlag = true;
 			const res = await sendmsg(msgObj, Tool.localItem('token'))
 			if (res.error != 0) {
@@ -361,12 +413,19 @@ export default {
             num: {},
 			user: {},
 			text: '',
-			msglist: {},
+			msglist: [],
             tabsParam:['主页','视频','资料'],//（这个也可以用对象key，value来实现）
             nowIndex:0,//默认第一个tab为激活状态
             curIndex: -1,
             recordOffset:0,
-            assolist:{}
+            assolist:{},
+            visitorlist:{},
+            recordlist:[],
+            loadmoreMsg:false,
+            newmsglist:[],
+            loadmoreVideo:false,
+            videoOffset:0,
+            newrecordlist:[]
 		}
 	}
 }
