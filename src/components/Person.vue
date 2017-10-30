@@ -1,11 +1,21 @@
 <template>
 	<div class="container">
         <header>
+            <img src="../assets/logo.png" alt="">
             <ul>
                 <li><a href="">播主</a></li>
                 <li><a href="">观看</a></li>
                 <li><a href="">介绍</a></li>
             </ul>
+            <div class="btn-header" v-if="loginUser">
+                <div class="btn-upload"><img src="../assets/upload.png" alt=""></div>
+                <div class="btn-notice"><img src="../assets/attention.png" alt=""></div>
+                <div class="btn-message"><img src="../assets/message.png" alt=""></div>
+                <div class="avatar"><img v-bind:src="loginUser.headimgurl" alt=""></div>
+            </div>
+            <div class="btn-header" v-if="!loginUser">
+                <div class="avatar">登陆</div>
+            </div>
         </header>
         <div id="cnt">
             <img src="../assets/bg.png" alt="">
@@ -43,13 +53,7 @@
                 <button></button>
             </div>
             <ul class="tab">
-               <!--  <li class="active">主页</li>
-                <li>视频</li>
-                <li>资料</li> -->
-
-                <li class="li-tab" v-for="(item,index) in tabsParam" 
-        @click="toggleTabs(index)"
-        :class="{active:index==nowIndex}" :key="item">{{item}}</li>
+                <li class="li-tab" v-for="(item,index) in tabsParam" @click="toggleTabs(index)" :class="{active:index==nowIndex}" :key="item">{{item}}</li>
             </ul>
         </div>
         <div class="common" id="index" v-show="nowIndex===0">
@@ -213,6 +217,11 @@
 	header{height:70px;background:#333;}
 	header ul{float:none;font-size:22px;width:465px;margin: auto}
 	header ul li{float:left;padding:0 55px;line-height:70px;color:#fff;}
+    header>img{width: 130px;height: 37px;position: absolute;left: 100px;margin-top: 16px;}
+    .btn-header{position: absolute;right:100px;margin-top:15px;}
+    .btn-header>div{display: inline-block;width:40px;height:40px;margin-left: 40px;cursor: pointer;}
+    .btn-header>div>img{width:100%;height:100%;border-radius: 50%;}
+    .btn-header>div.avatar{background: #fff;color:#333;font-size: 10px;line-height: 40px;text-align: center;border-radius: 50%;}
 	#cnt{position:relative;font-size:0;}
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
@@ -311,7 +320,7 @@
 </style>
 
 <script>
-import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis} from '@/utils/http'
+import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis,getLoginUserinfo} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -322,7 +331,7 @@ export default {
         this.getRecordlist();
 	},
 	mounted() {
-		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA2MDA2NzcxLCJleHAiOjE1MDYyNjU5NzEsIm5iZiI6MTUwNjAwNjc3MSwianRpIjoiOWYxZmJjMDRkMTE2NjU3ODkwYzE3YzZmNzY0M2Q1OTEifQ.wNW5BePBQqfkEE9KRaw9a2Qz1iRgbL_I4q32KGotf5g"))
+		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5MzQzNzUwLCJleHAiOjE1MDk2MDI5NTAsIm5iZiI6MTUwOTM0Mzc1MCwianRpIjoiNzJhNjc5MmZlYjJhOTE0MmNlZmI4NWZiN2NjMzQyNGMifQ.P73KHPAeTv1jN_pgX80BT86Zb6woXsbVSrl03VoZxpc"))
 	},
 	computed: {
 		...mapState({
@@ -356,6 +365,9 @@ export default {
             //获取访客列表
             const res5 = await getVisitorhis({ 'liveuid': this.route.query.id,size:32 })
             this.visitorlist = res5.data;
+
+            const res6 = await getLoginUserinfo({}, Tool.localItem('token'));
+            this.loginUser = res6.data;
 
 		},
 		async getMsglist() {
@@ -441,7 +453,8 @@ export default {
             loadmoreMsg:false,
             loadmoreVideo:false,
             videoOffset:0,
-            newrecordlist:[]
+            newrecordlist:[],
+            loginUser:{}
 		}
 	}
 }

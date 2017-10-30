@@ -1,6 +1,6 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://www.tianyantv.com'
+axios.defaults.baseURL = 'http://192.168.10.121'
 //设置默认请求头
 axios.defaults.headers = {
 	'Content-Type': 'application/json'
@@ -94,12 +94,13 @@ class Axios {
 }
 
 export const recordlist = Axios.get('/live/recordlist');//获取视频列表
-export const userinfo = Axios.get;//获取用户个人信息
+export const userinfo = Axios.get;//根据uid获取用户个人信息
 export const msglist = Axios.get('/live/messageboard');//获取留言板列表
 export const sendmsg = Axios.post('/live/messageboard');//发送留言
 export const addVisitorhis = Axios.post('/user/addvisitorhis');//添加访客记录
 export const getVisitorhis = Axios.post('/user/visitorhis');//获取访客列表
 export const getAssocbylid = Axios.post('/live/getassocbylid');//根据uid查询主播关联主播
+export const getLoginUserinfo = Axios.post('/user/getuserdetail');//根据token获取用户个人信息
 
 
 
