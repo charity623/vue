@@ -101,6 +101,7 @@ export const addVisitorhis = Axios.post('/user/addvisitorhis');//添加访客记
 export const getVisitorhis = Axios.post('/user/visitorhis');//获取访客列表
 export const getAssocbylid = Axios.post('/live/getassocbylid');//根据uid查询主播关联主播
 export const getLoginUserinfo = Axios.post('/user/getuserdetail');//根据token获取用户个人信息
+export const livedetail = Axios.post('/live/livedetail');//根据token获取直播间信息
 
 
 

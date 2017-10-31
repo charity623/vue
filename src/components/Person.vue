@@ -55,6 +55,14 @@
             <ul class="tab">
                 <li class="li-tab" v-for="(item,index) in tabsParam" @click="toggleTabs(index)" :class="{active:index==nowIndex}" :key="item">{{item}}</li>
             </ul>
+            <div class="arrow-box">
+                <img src="../assets/drop_down.png" alt="">
+               <div class="arrow-btn">
+                   <p>分享</p>
+                   <p @click="accusation(index)">举报</p>
+            </div>
+            </div>
+            
         </div>
         <div class="common" id="index" v-show="nowIndex===0">
         	<ul>
@@ -162,22 +170,38 @@
                <h4>资本资料</h4>
                <ul>
                    <li>
-                       <span>用户名</span><span>real__隔壁老胖兔</span>
+                       <span>用户名</span><span>{{user.name}}</span>
                    </li>
                    <li>
-                       <span>性别</span><span>女</span>
+                       <span>性别</span>
+                         <!--  性别 0：女  1：男 2：未知 -->
+                       <span v-if="user.sex==0">
+                       女
+                       </span>
+                       <span v-if="user.sex==1">
+                      男
+                       </span>
+                       <span v-if="user.sex==2">
+                      未知
+                       </span>
                    </li>
                    <li>
-                       <span>签名</span><span>无</span>
+                       <span>签名</span>
+                       <span v-if="user.sign==null">无</span>
+                       <span v-if="user.sign!=null">user.sign</span>
                    </li>
                    <li>
-                       <span>生日</span><span>1991/11/14</span>
+                       <span>生日</span>
+                        <span v-if="user.born==null">无</span>
+                       <span v-if="user.born!=null">user.born</span>
                    </li>
                    <li>
-                       <span>现居</span><span>北京海淀</span>
+                       <span>现居</span>
+                           <span v-if="user.address==null">无</span>
+                       <span v-if="user.address!=null">user.address</span>
                    </li>
                    <li>
-                       <span>站龄</span><span>268天</span>
+                       <span>创建于</span><span>{{user.created_at}}</span>
                    </li>
                </ul>
            </div>
@@ -208,6 +232,11 @@
 </template>
 
 <style scoped>
+    .arrow-box{position: absolute;top: 0;right: 20%;}
+    .arrow-box:hover>div{display: block;}
+    .arrow-box>img{float: right;}
+    .arrow-btn{width:136px;background:#fff;border-radius: 5px;display: none;margin-top:40px;}
+    .arrow-btn>p{padding-top:18px;padding-bottom:18px;font-size: 20px;color:#666;text-align:center;cursor: pointer;}
     .loadmore{width:100%;height:74px;border-top:1px solid #ededed;line-height: 74px;font-size: 16px;color:#333;cursor: pointer;}
     .loadmoreVideo{width:100%;margin:42px auto 58px;color:#666;font-size: 24px;cursor: pointer;}
 	ul,
@@ -298,9 +327,9 @@
     .msgdetail .reply,.msgdetail .message{margin-left:92px;}
     /* .msgdetail .reply span:nth-child(1){} */
     .msgdetail .reply span:nth-child(2){float: right}
-    .userPanel{width:698px;height:474px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);border-radius: 2px;margin:0 auto;padding-left:70px;}
+    .userPanel{width:698px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);border-radius: 2px;margin:0 auto;padding-left:70px;overflow: hidden;}
     .userPanel h4{font-size: 18px;color:#333;text-align: left;padding-top:32px;margin-bottom:72px;font-weight: bold;}
-    .userPanel ul{width: 100%;}
+    .userPanel ul{width: 100%;margin-bottom:40px;}
     .userPanel li{float:none;font-size: 18px;color:#333;text-align: left;margin-bottom:32px;}
     .userPanel li span:nth-child(1){width:112px;text-align: left;display: inline-block;}
      footer{width:100%;background:#fff;margin-top:30px;}
@@ -320,7 +349,7 @@
 </style>
 
 <script>
-import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis,getLoginUserinfo} from '@/utils/http'
+import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis,getLoginUserinfo,livedetail} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -368,6 +397,9 @@ export default {
 
             const res6 = await getLoginUserinfo({}, Tool.localItem('token'));
             this.loginUser = res6.data;
+
+            const res7 = await livedetail({'liverid':this.user.id}, Tool.localItem('token'));
+            this.liveinfo = res7.data;
 
 		},
 		async getMsglist() {
@@ -454,7 +486,8 @@ export default {
             loadmoreVideo:false,
             videoOffset:0,
             newrecordlist:[],
-            loginUser:{}
+            loginUser:{},
+            liveinfo:{}
 		}
 	}
 }
