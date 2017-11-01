@@ -3,15 +3,32 @@
         <header>
             <img src="../assets/logo.png" alt="">
             <ul>
-                <li><a href="">播主</a></li>
-                <li><a href="">观看</a></li>
-                <li><a href="">介绍</a></li>
+                <li><a href="/web/www/index.html#/index" target="_blank">播主</a></li>
+                <li><a href="/web/www/index.html#/list" target="_blank">观看</a></li>
+                <li><a href="/web/www/index.html#/contact" target="_blank">介绍</a></li>
             </ul>
             <div class="btn-header" v-if="loginUser">
-                <div class="btn-upload"><img src="../assets/upload.png" alt=""></div>
-                <div class="btn-notice"><img src="../assets/attention.png" alt=""></div>
-                <div class="btn-message"><img src="../assets/message.png" alt=""></div>
-                <div class="avatar"><img v-bind:src="loginUser.headimgurl" alt=""></div>
+                <div class="btn-upload"><a :href="'/web/www/live-new.html#/videoadmin?uid='+loginUser.uid" target="_blank"><img src="../assets/upload.png" alt=""></a></div>
+                <div class="btn-notice"><a href="/web/www/live-new.html#/notice" target="_blank"><img src="../assets/attention.png" alt=""></a></div>
+                <div class="btn-message"><a href="/web/www/message.html" target="_blank"><img src="../assets/message.png" alt=""></a></div>
+                <div class="avatar"><img v-bind:src="loginUser.headimgurl" alt="">
+                    <div class="userPanel-show">
+                        <p class="logout" @click="loginOut()">注销</p>
+                        <img class="avatar" v-bind:src="loginUser.headimgurl" alt="" >
+                        <p class="nickname ">{{loginUser.name}}</p>
+                        <div class="balance">
+                            <span class="">余额：{{loginUser.balance}}元</span><span class="charge"><a href="/web/www/live-new.html#/balance" style="color:#666">充值</a></span>
+                        </div>
+                        <div class="message">
+                            <span class="clearfix"><a href="/web/www/message.html"><img src="../assets/user_msg.png" alt=""></a></span>
+                            <span class="clearfix"><a href="/web/www/live-new.html#/history"><img src="../assets/user_history.png" alt=""></a></span>
+                        </div>
+                        <div class="uesrMenu userMenu">
+                            <div class="user_detail"><a href="/web/www/live-new.html#/user"></a></div>
+                            <div class="liveApply"><a href="/web/www/live-new.html#/apply"></a></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="btn-header" v-if="!loginUser">
                 <div class="avatar">登陆</div>
@@ -49,7 +66,7 @@
             <h3>{{user.name}}</h3>
             <h4>ta只想安静的做一个路人，所以没有填写签名</h4>
             <div class="btn">
-                <button></button>
+                <button @click="isActive=true;"></button>
                 <button></button>
             </div>
             <ul class="tab">
@@ -62,7 +79,6 @@
                    <p @click="accusation(index)">举报</p>
             </div>
             </div>
-            
         </div>
         <div class="common" id="index" v-show="nowIndex===0">
         	<ul>
@@ -228,10 +244,27 @@
                 <p>Copyright&nbsp;2015-2017&nbsp;天眼通&nbsp;All Rights Reserved &gt;京ICP备16002486号</p>
             </div>
         </footer>
+        <div class="mask" v-bind:class="{ show: isActive }">
+            <div class="panel msgPanel">
+                <div class="close" @click="isActive=false"></div>
+                <h3>发送私信</h3>
+                <textarea name="" id="" cols="30" rows="10" placeholder="发送私信"></textarea>
+                <button>发送</button>
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
+.show{display: block!important;}
+.mask{width:100%;height:100%;background:rgba(0,0,0,.4);position: fixed;top:0;left:0;z-index: 2;display: none;}
+.panel{border-radius: 5px;background: #fff;position:fixed;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);z-index: 3;}
+.panel.msgPanel{width:562px;/*height:428px;*/}
+.msgPanel h3{margin:40px auto 44px;text-align: center;font-size: 30px; color:#666;}
+.msgPanel textarea{width:450px;height:160px;background:#fbfbfb;border:1px solid #dcdcdc;border-radius: 5px;font-size: 22px;color:#999;text-indent: 10px;padding:10px;resize:none;outline: none;}
+.msgPanel button{margin:36px auto 40px;width:470px;height:60px;border-radius: 5px;background: #e3e3e3;border:0;cursor: pointer;color:#fff;font-size: 26px;}
+.msgPanel .close{background:url(../assets/off.png) 0 0 no-repeat;width:26px;height:26px;position:absolute;top:42px;right:50px;cursor: pointer;}
+.msgPanel .close:hover{background:url(../assets/off.png) 0 -26px no-repeat;}
     .arrow-box{position: absolute;top: 0;right: 20%;}
     .arrow-box:hover>div{display: block;}
     .arrow-box>img{float: right;}
@@ -251,7 +284,8 @@
     .btn-header>div{display: inline-block;width:40px;height:40px;margin-left: 40px;cursor: pointer;}
     .btn-header>div>img{width:100%;height:100%;border-radius: 50%;}
     .btn-header>div.avatar{background: #fff;color:#333;font-size: 10px;line-height: 40px;text-align: center;border-radius: 50%;}
-	#cnt{position:relative;font-size:0;}
+	.btn-header .avatar:hover .userPanel-show{display: block;}
+    #cnt{position:relative;font-size:0;}
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
 	#cnt .cnt ul{width:40%;color:#000;font-size:20px;}
@@ -346,6 +380,36 @@
      footer .bottom a{width:20px;height:17px;float: left;margin-left: 135px;}
      footer .bottom img{width:20px;height:17px;margin-top:8px;}
      footer .bottom p{float:right;line-height:35px;display:inline-block;font-size:12px;color:#666;}
+
+    .userPanel-show{display:none;position:absolute;right:0;top:49px;width:300px;height:344px;line-height:1;text-align:center;font-size:14px;color:#666;background-color:#fff;border:1px solid #ccc;border-radius:5px;-webkit-background-size:100% 100%;background-size:100% 100%;    z-index: 1;}
+    .userPanel-show:before{border:7px solid transparent;border-bottom-color:#cfcfcf}
+    .userPanel-show:after,
+    .userPanel-show:before{content:'';position:absolute;right:12px;top:-14px;}
+    .userPanel-show:after{margin-top:1px;border:7px solid transparent;border-bottom-color:#fff}
+    .userPanel-show>*{margin-bottom:12px;}
+    .userPanel-show>p.logout{position:absolute;right:0;top:0;line-height:60px;margin-right:20px;cursor:pointer;}
+    .userPanel-show>img.avatar{width:100px;height:100px;border-radius:50%;margin:40px 0 10px 0;}
+    .userPanel-show>div.balance>span{display:inline-block;vertical-align:middle;}
+    .userPanel-show>div.balance>span.charge{font-size:12px;border:1px solid #666;border-radius:2px;margin-left:10px;padding:1px;cursor:pointer;}
+    .userPanel-show .message>span{display:inline-block;vertical-align:middle;padding:0 6px;cursor:pointer;}
+    .uesrMenu{height:105px;line-height:105px;font-size:0;}
+    .uesrMenu>div{display:inline-block;width:33.33%;height:60px;vertical-align:middle;border-right:2px solid #e6e6e6;cursor:pointer;}
+    .uesrMenu>div:nth-child(3){border:none;}
+    .uesrMenu>div.user_detail{background:url(../assets/user_detail.png) center no-repeat;}
+    .uesrMenu>div.user_detail:active,
+    .uesrMenu>div.user_detail:hover{background:url(../assets/user_detail_press.png) center no-repeat;}
+    .uesrMenu>div.liveSet{background:url(../assets/liveSet.png) center no-repeat;}
+    .uesrMenu>div.liveSet:active,
+    .uesrMenu>div.liveSet:hover{background:url(../assets/liveSet_press.png) center no-repeat;}
+    .uesrMenu>div.myRoom{background:url(../assets/myRoom.png) center no-repeat;}
+    .uesrMenu>div.myRoom:active,
+    .uesrMenu>div.myRoom:hover{background:url(../assets/myRoom_press.png) center no-repeat;}
+    .uesrMenu>div.liveApply{background:url(../assets/user_apply.png) center no-repeat;}
+    .uesrMenu>div.liveApply:active,
+    .uesrMenu>div.liveApply:hover{background:url(../assets/user_apply_press.png) center no-repeat;}
+    .charge a,
+    .uesrMenu a{display:block;width:100%;height:100%;}
+    .uesrMenu.userMenu>div:nth-child(2){border:none;}
 </style>
 
 <script>
@@ -465,6 +529,10 @@ export default {
         },
         onFocus(){
             this.curIndex = -1;
+        },
+        loginOut(){
+            Tool.removeLocalItem("token");
+            window.location.reload();
         }
 	},
 	data() {
@@ -487,7 +555,8 @@ export default {
             videoOffset:0,
             newrecordlist:[],
             loginUser:{},
-            liveinfo:{}
+            liveinfo:{},
+            isActive:false
 		}
 	}
 }
