@@ -175,5 +175,12 @@ export default {
     paramStr = paramArr.join('&');
     paramStr = '?' + paramStr;
     return paramStr;
+	},
+	text(data){
+		var text = '<div id="textStyle">' + data + '</div>';
+      document.getElementById("app").appendChild(text);
+      setTimeout(function() {
+          document.getElementById("app").removeChild("textStyle");
+      }, 1000 * 3)
 	}
 }

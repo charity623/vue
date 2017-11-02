@@ -53,11 +53,12 @@ class Axios {
 	  return axios(data)
 	    .then((response) => {
 	    	if(response.status == 200){
-	    		if(response.data.error == 0){
-	    			return response.data
-	    		} else {
-	    			console.log(response.data.desc)
-	    		}
+	    		// if(response.data.error == 0){
+	    		// 	return response.data
+	    		// } else {
+	    		// 	console.log(response.data.desc)
+	    		// }
+	    		return response.data
 	    	}else{
 	    		if (response.status === 404) {
 	    		  throw '404'
@@ -102,6 +103,10 @@ export const getVisitorhis = Axios.post('/user/visitorhis');//获取访客列表
 export const getAssocbylid = Axios.post('/live/getassocbylid');//根据uid查询主播关联主播
 export const getLoginUserinfo = Axios.post('/user/getuserdetail');//根据token获取用户个人信息
 export const livedetail = Axios.post('/live/livedetail');//根据token获取直播间信息
+export const noticeUser = Axios.post('/user/focusto');//关注主播
+export const sendPrivate = Axios.post('/user/message');//发送私信
+
+
 
 
 

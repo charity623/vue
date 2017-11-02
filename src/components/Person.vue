@@ -66,18 +66,18 @@
             <h3>{{user.name}}</h3>
             <h4>ta只想安静的做一个路人，所以没有填写签名</h4>
             <div class="btn">
+                <button :class="{active:liveinfo.is_focus==1}" @click="noticeUser()"></button>
                 <button @click="isActive=true;"></button>
-                <button></button>
             </div>
             <ul class="tab">
                 <li class="li-tab" v-for="(item,index) in tabsParam" @click="toggleTabs(index)" :class="{active:index==nowIndex}" :key="item">{{item}}</li>
             </ul>
             <div class="arrow-box">
-                <img src="../assets/drop_down.png" alt="">
-               <div class="arrow-btn">
+               <!--  <img src="../assets/drop_down.png" alt="">
+                <div class="arrow-btn">
                    <p>分享</p>
                    <p @click="accusation(index)">举报</p>
-            </div>
+                </div> -->
             </div>
         </div>
         <div class="common" id="index" v-show="nowIndex===0">
@@ -248,10 +248,11 @@
             <div class="panel msgPanel">
                 <div class="close" @click="isActive=false"></div>
                 <h3>发送私信</h3>
-                <textarea name="" id="" cols="30" rows="10" placeholder="发送私信"></textarea>
-                <button>发送</button>
+                <textarea name="" id="" cols="30" rows="10" placeholder="发送私信" v-model="content"></textarea>
+                <button @click="sendPrivate(content)">发送</button>
             </div>
         </div>
+        
     </div>
 </template>
 
@@ -263,6 +264,7 @@
 .msgPanel h3{margin:40px auto 44px;text-align: center;font-size: 30px; color:#666;}
 .msgPanel textarea{width:450px;height:160px;background:#fbfbfb;border:1px solid #dcdcdc;border-radius: 5px;font-size: 22px;color:#999;text-indent: 10px;padding:10px;resize:none;outline: none;}
 .msgPanel button{margin:36px auto 40px;width:470px;height:60px;border-radius: 5px;background: #e3e3e3;border:0;cursor: pointer;color:#fff;font-size: 26px;}
+.msgPanel button:hover{background:#999;}
 .msgPanel .close{background:url(../assets/off.png) 0 0 no-repeat;width:26px;height:26px;position:absolute;top:42px;right:50px;cursor: pointer;}
 .msgPanel .close:hover{background:url(../assets/off.png) 0 -26px no-repeat;}
     .arrow-box{position: absolute;top: 0;right: 20%;}
@@ -306,6 +308,9 @@
 	#detail .btn button:nth-child(2){background:url(../assets/private.png) 0 0 no-repeat;margin-left:42px;}
 	#detail .btn button:nth-child(1):hover{background:url(../assets/notice.png) 0 -50px no-repeat;}
 	#detail .btn button:nth-child(2):hover{background:url(../assets/private.png) 0 -50px no-repeat;}
+
+    #detail .btn button.active{background:url(../assets/concern.png) 0 0px no-repeat;}
+    #detail .btn button.active:hover{background:url(../assets/concern.png) 0 -50px no-repeat;}
 	#detail .tab{box-shadow:4px 0 30px rgba(51,51,51,.25);position:absolute;left:50%;transform:translateX(-50%);width:768px;height:64px;background:#f4f4f4;border-radius:10px;bottom:-32px;}
 	#detail .tab li{width:33%;text-align:center;line-height:64px;font-size:24px;color:#999;cursor:pointer;}
 	#detail .tab li.active{color:#4b494c;}
@@ -315,7 +320,7 @@
 	#index li .thumb,#videolist li .thumb{width:100%;height:130px;background:#999;position:relative;}
     #index li .thumb img,#videolist li .thumb img{width:100%;height:100%;}
 	#index li .thumb>span,#videolist li .thumb>span{position:absolute;bottom:6px;right:8px;background:#666;display:inline-block;font-size:12px;height:18px;line-height:18px;padding:0 5px;border-radius:3px;}
-	#index li h3,#videolist li h3{font-size:19px;color:#333;height:80px;padding-top:26px;text-align:center;}
+	#index li h3,#videolist li h3{font-size:19px;color:#333;height:80px;text-align:center;padding: 26px 20px 0;}
 	#index li p,#videolist li p{background:url(../assets/good2.png) 80px center no-repeat;background-size:12px 10px;font-size:16px;color:#999;text-align:center;}
 	.others .left{width:340px;margin-right:20px;float: left;}
 	.others .left .liver{width:100%;min-height:350px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:22px;padding-top:30px;}
@@ -410,10 +415,12 @@
     .charge a,
     .uesrMenu a{display:block;width:100%;height:100%;}
     .uesrMenu.userMenu>div:nth-child(2){border:none;}
+    #textStyle{z-index:9999;border-radius:10px;height:90px;line-height:90px;position:fixed;left:50%;padding:0 30px;font-size:26px;color:#fff;background:rgba(51,51,51,.9);top:50%;transform:translate(-50%,-50%);}
+
 </style>
 
 <script>
-import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis,getLoginUserinfo,livedetail} from '@/utils/http'
+import { userinfo, recordlist, msglist, sendmsg,addVisitorhis,getAssocbylid,getVisitorhis,getLoginUserinfo,livedetail,noticeUser,sendPrivate} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -424,7 +431,7 @@ export default {
         this.getRecordlist();
 	},
 	mounted() {
-		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5MzQzNzUwLCJleHAiOjE1MDk2MDI5NTAsIm5iZiI6MTUwOTM0Mzc1MCwianRpIjoiNzJhNjc5MmZlYjJhOTE0MmNlZmI4NWZiN2NjMzQyNGMifQ.P73KHPAeTv1jN_pgX80BT86Zb6woXsbVSrl03VoZxpc"))
+		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5NjA5NTI4LCJleHAiOjE1MDk4Njg3MjgsIm5iZiI6MTUwOTYwOTUyOCwianRpIjoiZTAxNzRiNDJmNzE0ZjY1OTBkNzUyYTc3NjA0YmMwNTUifQ.JUfXcoc25PlIoq3B4J1T4L9rqyH5rp0T2EJgXshwjIM"))
 	},
 	computed: {
 		...mapState({
@@ -514,6 +521,9 @@ export default {
 			const res = await sendmsg(msgObj, Tool.localItem('token'))
 			if (res.error != 0) {
 				this.btnFlag = false;
+                if(res.error==999){
+                    Tool.text("请登录");
+                }
 			}else{
                 this.text = ''
                 this.recordOffset = 0;
@@ -521,6 +531,33 @@ export default {
                 this.curIndex = -1;
 			}
 		},
+       
+        async  noticeUser() {
+            if(!this.loginUser){
+                alert("请登录");
+                return false
+            }
+            const res = await  noticeUser({'liverid':this.user.id},Tool.localItem('token'))
+            if(res.error==0){
+                if(this.liveinfo.is_focus==1){
+                    this.liveinfo.is_focus = 0;
+                } else {
+                    this.liveinfo.is_focus = 1;
+                }
+            } else if(res.data==999){
+                alert("请登录");
+            }
+        },
+        async sendPrivate(content){
+            const res = await  sendPrivate({'touser':this.route.query.id,'content':content},Tool.localItem('token'))
+            if(res.data==0){
+                alert("发送成功");
+                this.isActive=false;
+            } else if(res.data==999){
+                alert("请登录")
+            }
+
+        },
         toggleTabs(index){
             this.nowIndex=index;
         },
@@ -556,7 +593,8 @@ export default {
             newrecordlist:[],
             loginUser:{},
             liveinfo:{},
-            isActive:false
+            isActive:false,
+            content:''
 		}
 	}
 }
