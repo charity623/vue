@@ -45,14 +45,14 @@ router.beforeEach(function (to, from, next) {
   }
 
   //这里判断用户是否登录，我例子中是验证本地存储是否有token
-  if (to.path !== '/' && !Tool.getCookie("Token")) {
-      next({
-          path: '/',
-          query: { redirect: to.fullPath }
-      })
-  } else {
-      next()
-  }
+  // if (to.path !== '/' && !Tool.getCookie("Token")) {
+  //     next({
+  //         path: '/',
+  //         query: { redirect: to.fullPath }
+  //     })
+  // } else {
+  //     next()
+  // }
 
   if (/\/http/.test(to.path)) {
     let url = to.path.split('http')[1]

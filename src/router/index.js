@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 // import Home from '@/components/Home';
 import Person from '@/components/Person';
+import Login from '@/components/Login';
 // import SysInfo from '@/components/SysInfo';
 import store from '@/store';
 
@@ -10,9 +11,14 @@ Vue.use(Router);
 const router = new Router({
   routes: [
     {
-      path: '/(:id)?',
-      name: 'Person',
+      path: '/person/:id',
+      name: 'person',
       component: Person,
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login,
     }
     // {
     //   path: '/home',

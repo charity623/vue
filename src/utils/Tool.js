@@ -177,10 +177,15 @@ export default {
     return paramStr;
 	},
 	text(data){
-		var text = '<div id="textStyle">' + data + '</div>';
-      document.getElementById("app").appendChild(text);
-      setTimeout(function() {
-          document.getElementById("app").removeChild("textStyle");
-      }, 1000 * 3)
+		var element = document.createElement("div");
+		element.id = "textStyle";
+		var textNode = document.createTextNode(data);
+		element.appendChild(textNode);
+		document.body.appendChild(element);
+		// var text = '<div id="textStyle">' + data + '</div>';
+		// document.getElementById("app").appendChild(text);
+		setTimeout(function() {
+			document.getElementById("textStyle").parentNode.removeChild("textStyle");
+		}, 1000 * 3)
 	}
 }

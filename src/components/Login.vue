@@ -7,7 +7,7 @@
                 <li><a href="/web/www/index.html#/list" target="_blank">观看</a></li>
                 <li><a href="/web/www/index.html#/contact" target="_blank">介绍</a></li>
             </ul>
-            <div class="btn-header" v-if="!loginUser">
+            <div class="btn-header" v-if="loginUser">
                 <div class="btn-upload"><a :href="'/web/www/live-new.html#/videoadmin?uid='+loginUser.uid" target="_blank"><img src="../assets/upload.png" alt=""></a></div>
                 <div class="btn-notice"><a href="/web/www/live-new.html#/notice" target="_blank"><img src="../assets/attention.png" alt=""></a></div>
                 <div class="btn-message"><a href="/web/www/message.html" target="_blank"><img src="../assets/message.png" alt=""></a></div>
@@ -30,9 +30,9 @@
                     </div>
                 </div>
             </div>
-            <div class="btn-header" v-else>
-                <div class="avatar"><router-link :to="'/login'" target="_blank">登陆</router-link></div>
-                 
+            <div class="btn-header" v-if="!loginUser">
+                <div class="avatar">登陆</div>
+                 <a v-link="{ name: 'history', params: { deviceId: 123, dataId:456 }}">history</a>
             </div>
         </header>
         <div id="cnt">
