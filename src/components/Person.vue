@@ -7,7 +7,7 @@
                 <li><a href="/web/www/index.html#/list" target="_blank">观看</a></li>
                 <li><a href="/web/www/index.html#/contact" target="_blank">介绍</a></li>
             </ul>
-            <div class="btn-header" v-if="!loginUser">
+            <div class="btn-header" v-if="loginUser">
                 <div class="btn-upload"><a :href="'/web/www/live-new.html#/videoadmin?uid='+loginUser.uid" target="_blank"><img src="../assets/upload.png" alt=""></a></div>
                 <div class="btn-notice"><a href="/web/www/live-new.html#/notice" target="_blank"><img src="../assets/attention.png" alt=""></a></div>
                 <div class="btn-message"><a href="/web/www/message.html" target="_blank"><img src="../assets/message.png" alt=""></a></div>
@@ -430,9 +430,10 @@ export default {
 		this.init();
 		this.getMsglist();
         this.getRecordlist();
+        console.log(id())
 	},
 	mounted() {
-		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5NjA5NTI4LCJleHAiOjE1MDk4Njg3MjgsIm5iZiI6MTUwOTYwOTUyOCwianRpIjoiZTAxNzRiNDJmNzE0ZjY1OTBkNzUyYTc3NjA0YmMwNTUifQ.JUfXcoc25PlIoq3B4J1T4L9rqyH5rp0T2EJgXshwjIM"))
+		// console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5NjA5NTI4LCJleHAiOjE1MDk4Njg3MjgsIm5iZiI6MTUwOTYwOTUyOCwianRpIjoiZTAxNzRiNDJmNzE0ZjY1OTBkNzUyYTc3NjA0YmMwNTUifQ.JUfXcoc25PlIoq3B4J1T4L9rqyH5rp0T2EJgXshwjIM"))
 	},
 	computed: {
 		...mapState({
@@ -454,20 +455,20 @@ export default {
 	methods: {
 		async init() {
             //获取视频列表
-			const res = await recordlist({ 'uid': id })
+			const res = await recordlist({ 'uid': this.id })
             this.recordinfo = res.data;
             this.num = res.num;
             //获取用户信息
-			const res2 = await userinfo('/user/detail/' + id)();
+			const res2 = await userinfo('/user/detail/' + this.id)();
 			this.user = res2.data;
             // console.log(this.user.type)
             //关联主播列表
-            const res4 = await getAssocbylid({ 'uid': id })
+            const res4 = await getAssocbylid({ 'uid': this.id })
             this.assolist = res4.data;
             //添加访客记录
-            const res3 = await addVisitorhis({ 'liveuid': id}, Tool.localItem('token'));
+            const res3 = await addVisitorhis({ 'liveuid': this.id}, Tool.localItem('token'));
             //获取访客列表
-            const res5 = await getVisitorhis({ 'liveuid': id,size:32 })
+            const res5 = await getVisitorhis({ 'liveuid': this.id,size:32 })
             this.visitorlist = res5.data;
 
             const res6 = await getLoginUserinfo({}, Tool.localItem('token'));
@@ -478,7 +479,7 @@ export default {
 
 		},
 		async getMsglist() {
-            const res = await msglist({ 'liveuid': id,'offset':this.recordOffset}, Tool.localItem('token'));
+            const res = await msglist({ 'liveuid': this.id,'offset':this.recordOffset}, Tool.localItem('token'));
             const newmsglist = res.data;
             if(this.recordOffset == 0){
                 this.msglist = newmsglist
@@ -495,7 +496,7 @@ export default {
             }
 		},
         async getRecordlist() {
-            const res = await recordlist({ 'uid': id ,size:12,'offset':this.videoOffset})
+            const res = await recordlist({ 'uid': this.id ,size:12,'offset':this.videoOffset})
 
             this.newrecordlist = res.data;
 
@@ -513,7 +514,7 @@ export default {
 		async sendMsg(i) {
             // console.log(arguments.length)
             let msgObj= {
-                'liveuid': id,
+                'liveuid': this.id,
                 'content': this.text.trim()
             }
             if(arguments.length != 0){
@@ -553,7 +554,7 @@ export default {
             }
         },
         async sendPrivate(content){
-            const res = await  sendPrivate({'touser':id,'content':content},Tool.localItem('token'))
+            const res = await  sendPrivate({'touser':this.id,'content':content},Tool.localItem('token'))
             if(res.data==0){
                 alert("发送成功");
                 this.isActive=false;
