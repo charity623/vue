@@ -84,7 +84,7 @@
         <div class="common" id="index" v-show="nowIndex===0">
         	<ul>
         		<li v-for="i in slicedRecordInfo" :key="i">
-        			<a href="">
+        			<a :href="'/web/www/live-new.html#/video?id='+i.id+'&uid='+i.uid" target="_blank">
         				<div class="thumb">
         					<img v-bind:src="i.record_pic" alt="">
         					<span>{{i.duration}}</span>
@@ -348,7 +348,9 @@
     .others .left .visitors .visitorlist{width:304px;padding:20px 17px 0;overflow: hidden;}
     .others .left .visitors .visitoritem{width:50px;margin:0px 13px 22px;float: left;}
     .others .left .visitors .visitoritem img{width:50px;height:50px;background:#999;border-radius: 100%;}
-    .others .left .visitors .visitoritem p{font-size: 13px;color:#666;}
+    .others .left .visitors .visitoritem p{font-size: 13px;color:#666;    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;}
 	.others .right{float: left;width:680px;box-shadow:2px 0 21px rgba(100,108,206,.24);background:#fff;min-height:100px;}
     .others .right #message{width:600px;margin:0 auto;overflow: hidden;}
     .others .right  textarea{width:99%;height:74px;border:1px solid #d6d6d6;border-radius: 5px;margin-top:19px;resize:none;padding-top: 10px;text-indent: 14px;margin-bottom:10px;font-size: 16px;color:#999;}
@@ -433,7 +435,7 @@ export default {
         console.log(id())
 	},
 	mounted() {
-		// console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjI4NSwiaXNzIjoiaHR0cDpcL1wvd3d3LnRpYW55YW50di5jb21cL2dldHRva2VuIiwiaWF0IjoxNTA5NjA5NTI4LCJleHAiOjE1MDk4Njg3MjgsIm5iZiI6MTUwOTYwOTUyOCwianRpIjoiZTAxNzRiNDJmNzE0ZjY1OTBkNzUyYTc3NjA0YmMwNTUifQ.JUfXcoc25PlIoq3B4J1T4L9rqyH5rp0T2EJgXshwjIM"))
+		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cLzE5Mi4xNjguMTAuMTIxXC9nZXR0b2tlbiIsImlhdCI6MTUxMDEyMTkxNiwiZXhwIjoxNTEwMzgxMTE2LCJuYmYiOjE1MTAxMjE5MTYsImp0aSI6IjA2YWE1OWZiYjY4NmFhY2YxNDNmMjhjNTdkOGYzMGZhIn0.TZLIS5DXrCqY-0eq5gN2khpR4BZZKachnWS5_XTwl5c"))
 	},
 	computed: {
 		...mapState({

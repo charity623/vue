@@ -93,7 +93,7 @@ class Axios {
 	    })
 	}
 }
-
+// person.vue
 export const recordlist = Axios.get('/live/recordlist');//获取视频列表
 export const userinfo = Axios.get;//根据uid获取用户个人信息
 export const msglist = Axios.get('/live/messageboard');//获取留言板列表
@@ -105,6 +105,8 @@ export const getLoginUserinfo = Axios.post('/user/getuserdetail');//根据token�
 export const livedetail = Axios.post('/live/livedetail');//根据token获取直播间信息
 export const noticeUser = Axios.post('/user/focusto');//关注主播
 export const sendPrivate = Axios.post('/user/message');//发送私信
+
+//
 
 
 
