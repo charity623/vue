@@ -106,7 +106,9 @@ export const livedetail = Axios.post('/live/livedetail');//根据token获取直�
 export const noticeUser = Axios.post('/user/focusto');//关注主播
 export const sendPrivate = Axios.post('/user/message');//发送私信
 
-//
+//login.vue
+export const login = Axios.post('/user/login');//login
+
 
 
 

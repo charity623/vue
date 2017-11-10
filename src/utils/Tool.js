@@ -182,10 +182,8 @@ export default {
 		var textNode = document.createTextNode(data);
 		element.appendChild(textNode);
 		document.body.appendChild(element);
-		// var text = '<div id="textStyle">' + data + '</div>';
-		// document.getElementById("app").appendChild(text);
 		setTimeout(function() {
-			document.getElementById("textStyle").parentNode.removeChild("textStyle");
+			document.getElementById("textStyle").parentNode.removeChild(element);
 		}, 1000 * 3)
 	}
 }
