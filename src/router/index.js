@@ -3,6 +3,7 @@ import Router from 'vue-router';
 // import Home from '@/components/Home';
 import Person from '@/components/Person';
 import Login from '@/components/Login';
+import Video from '@/components/Video';
 // import SysInfo from '@/components/SysInfo';
 import store from '@/store';
 
@@ -19,7 +20,13 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login,
+    },
+    {
+      path: '/video',
+      name: 'video',
+      component: Video,
     }
+
     // {
     //   path: '/home',
     //   name: 'home',
