@@ -153,7 +153,7 @@
                                     <span @click="curIndex = index">回复</span>
                                 </div>
                                 <div class="message" v-show="index == curIndex">
-                                    <textarea id="" placeholder="回复我，快~" v-model="subText"></textarea>
+                                    <textarea id="" placeholder="回复我，快！" v-model="subText"></textarea>
                                     <button @click="sendMsg(i)" :disabled="subBtnFlag">发送</button>
                                 </div>
                             </div>
@@ -288,6 +288,7 @@
     .btn-header>div>img{width:100%;height:100%;border-radius: 50%;}
     .btn-header>div.avatar{background: #fff;color:#333;font-size: 10px;line-height: 40px;text-align: center;border-radius: 50%;}
 	.btn-header .avatar:hover .userPanel-show{display: block;}
+    .btn-header a{color:#333;}
     #cnt{position:relative;font-size:0;}
 	#cnt img{width:100%;}
 	#cnt .cnt{width:1200px;position:absolute;bottom:14px;left:50%;transform:translateX(-50%);}
@@ -368,7 +369,7 @@
     .msgdetail .othermsg p{color:#666;margin-bottom: 12px;}
     .msgdetail .reply,.msgdetail .message{margin-left:92px;}
     /* .msgdetail .reply span:nth-child(1){} */
-    .msgdetail .reply span:nth-child(2){float: right}
+    .msgdetail .reply span:nth-child(2){float: right;cursor: pointer;}
     .userPanel{width:698px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);border-radius: 2px;margin:0 auto;padding-left:70px;overflow: hidden;}
     .userPanel h4{font-size: 18px;color:#333;text-align: left;padding-top:32px;margin-bottom:72px;font-weight: bold;}
     .userPanel ul{width: 100%;margin-bottom:40px;}

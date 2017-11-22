@@ -5,6 +5,7 @@
             <div class="header">
                 <img src="../assets/head_diagram.png" alt="">
             </div>
+            <!-- 登陆 -->
             <div class="panel" v-if="showPanel==1">
                 <h3>登陆</h3>
                 <hr>
@@ -17,6 +18,7 @@
                 </div>
                 <a href="/"><img src="../assets/weixin_login.png" alt=""></a>
             </div>
+            <!-- 找回密码 -->
             <div class="panel findpanel" v-if="showPanel==2">
                 <ul class="find">
                     <li v-for="(item,index) in tabsParam" @click="toggleTabs(index)" :class="{active:index==nowIndex}" :key="item">{{item}}</li>
@@ -37,25 +39,32 @@
                 </div>
                 <a @click="showPanel=1">返回上一级</a>
             </div>
+            <!-- 注册 -->
             <div class="panel findpanel" v-if="showPanel==3">
                 <ul class="find">
                     <li v-for="(item,index) in registertabsParam" @click="toggleTabs(index)" :class="{active:index==nowIndex}" :key="item">{{item}}</li>
                 </ul>
                 <hr>
                 <div v-show="nowIndex==0">
-                    <input type="text" placeholder="常用手机号码">
-                    <input type="password" placeholder="密码">
+                    <input type="text" placeholder="常用手机号码" v-model="mRegisterParams.phone">
+                    <input type="password" placeholder="密码" v-model="mRegisterParams.password">
                     <div class="getCode">
-                        <input type="text" placeholder="验证码">
-                        <span v-show="show" @click="getCode">获取验证码</span>
-                        <span v-show="!show" class="count">{{count}} s</span>
+                        <input type="text" placeholder="验证码" v-model="mRegisterParams.code">
+                        <span v-show="show" @click="sendRegisterCode">获取验证码</span>
+                        <span v-show="!show" class="count">{{count}}s</span>
                     </div>
                     <input type="text" placeholder="昵称">
                     <input type="button" value="注册">
                 </div>
                 <div v-show="nowIndex==1">
-                    <input type="text" placeholder="输入注册邮箱">
-                    <input type="button" value="注册">
+                    <input type="text" placeholder="输入注册邮箱" v-model="eRegisterParams.email">
+                    <input type="password" placeholder="密码" v-model="eRegisterParams.password">
+                    <div class="getImgCode">
+                        <input type="text" placeholder="验证码" v-model="eRegisterParams.captcha">
+                        <img v-bind:src="getImgCodeParam" alt="" @click="getImgCode()">
+                    </div>
+                    <input type="text" placeholder="昵称" v-model="eRegisterParams.name">
+                    <input type="button" value="注册" @click="emailRegister()">
                 </div>
                 <a @click="showPanel=1">已有账号？直接登陆</a>
             </div>
@@ -88,13 +97,13 @@
 <style scoped>
     .show{display: block!important;}
     .mask{width:100%;height:100%;background:rgba(0,0,0,.4);position: fixed;top:0;left:0;z-index: 2;display: none;}
-    .panel{border-radius: 5px;background: #fff;width:390px;padding:36px 24px 20px;margin:0 auto;}
+    .panel{border-radius: 5px;background: #fff;width:390px;padding:36px 24px 20px;margin:0 auto;box-shadow: 2px 0 8px rgba(0,0,0,.4);}
     .panel>h3{font-size: 22px;color:#666;font-weight: normal;text-align: left;}
     .panel>hr{border:0;height:1px;background: #e6e6e6;margin:24px auto
         ;}
     .panel input,.getCode{width:100%;height:40px;margin-bottom:26px;background:#f4f4f4;border-radius: 5px;border:1px solid #ddd;color:#bbb;font-size: 14px;text-indent: 10px;}
     .panel input[type="button"] {text-align: center;cursor: pointer;border:0;}
-    .panel>div{overflow: hidden;}
+    /*.panel>div{overflow: hidden;}*/
     .panel span{cursor: pointer;}
     .panel span:nth-child(1){float: left;}
     .panel span:nth-child(2){float: right;}
@@ -104,11 +113,15 @@
     .panel ul li.active{color:#666;}
     .panel.findpanel a{text-decoration: underline;font-size: 12px;color:#666;cursor: pointer;}
     .panel input[type="button"]:hover {background: #999;color:#fff;}
-    .getCode input[type="text"]{width: 70%;float: left;border:0;}
+    .getCode input[type="text"],.getImgCode input[type="text"]{width: 70%;float: left;border:0;}
     .getCode span{width:100px;float:right;height: 35px;background: #999;margin-top: 2.5px;color:#fff;line-height: 35px;text-align: center;border-radius: 5px;}
+    .getImgCode input[type="text"]{width:60%;border:1px solid #ddd;}
+    .getImgCode img{height:38px;float: right;border: 1px solid #ddd}
     .main{position: fixed;top:40px;width:100%;}
     .main>.header{margin:0 auto 66px;}
-     footer{width:100%;background:#fff;margin-top:30px;}
+     .container>img{width:100%;}
+     
+     footer{width:100%;background:#fff;position: fixed;bottom: 0;}
      footer>div{width:1200px;margin:0 auto;}
      footer .top{height:174px;}
      footer .top img{margin-top:20px;margin-right:72px;}
@@ -126,7 +139,7 @@
 </style>
 
 <script>
-import {login} from '@/utils/http'
+import {login,emailRegister,sendRegCode,mobileRegister} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -174,29 +187,59 @@ export default {
                }, 1000)
             }
         },
+        getImgCode(){
+            this.getImgCodeParam="http://192.168.10.121/user/captcha?_"+new Date().getTime();
+        },
+        async sendRegisterCode(){
+            if(!this.mRegisterParams.phone){
+                Tool.text("请输入手机号");
+                return false;
+            }
+            const res = await sendRegCode('phone',this.mRegisterParams.phone)
+            console.log(res)
+            if(res.error==0&&res.error){
+                Tool.text("验证码发送成功");
+                this.getCode();
+            } else {
+                Tool.text(res.desc)
+            }
+        },
         async login() {
             const res = await login(this.loginParams)
             this.logindata = res;
-            console.log(this.logindata)
             if(this.logindata.error==0){
                 Tool.localItem("token",this.logindata.token);
                 //link to prev-page or open index.html
             } else {
                 Tool.text('密码错误三次')
             }
-        }
+        },
+        async emailRegister() {
+            const res = await emailRegister(this.eRegisterParams)
+            this.eRegisterdata = res;
+            if(res.error==0){
+                // Tool.localItem("token",res.token);
+                // window.location.reload();
+            }  else {
+                Tool.text(res.desc)
+            }
+        },
 	},
 	data() {
 		return {
             show: true,
             count: '',
             timer: null,
-            showPanel:1,
+            showPanel:3,//1登陆 2找回面膜 3注册
             tabsParam:['手机找回','邮箱找回'],
             registertabsParam:['手机注册','邮箱注册'],
-            nowIndex:0,//默认第一个tab为激活状态
+            nowIndex:1,//默认第一个tab为激活状态
             loginParams:{},//login model
-            logindata:{}
+            logindata:{},
+            eRegisterParams:{},//邮箱注册 model
+            eRegisterdata:{},
+            getImgCodeParam:'http://192.168.10.121/user/captcha',
+            mRegisterParams:{}
 		}
 	}
 }

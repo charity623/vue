@@ -51,6 +51,34 @@ export default {
             var a =true; if(a){console.log("执行(a)")}  
             var b=100; if(b){console.log("执行if(b)")} //强制转换100 为true
             var c=''; if(c){console.log("执行if(c)")} else {console.log("未执行if(c)")} //强制转换 '' 为false
+
+            //构造函数
+            function Foo(name,age){
+                this.name = name;
+                this.age = age;
+                this.class="class-1"
+            }
+            var f= new Foo('zhangsan',20)
+            console.log(f.name);
+            //var a = {};//var a = new object()
+            //var a = [];//var a = new Array()
+            //function Foo(){}//var Foo = new Function(...)
+            //原型规则和示例
+            var obj ={};
+            obj.a = 100;
+            var arr = [];
+            arr.a = 100;
+            function fn(){}
+            fn.a = 100;
+
+            console.log(obj.__proto__);
+            console.log(arr.__proto__);
+            console.log(fn.__proto__);
+
+            console.log(fn.prototype);
+            console.log(obj.__proto__===Object.prototype)//obj的构造函数就是Object
+
+
         },
         
 	},

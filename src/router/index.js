@@ -25,8 +25,11 @@ const router = new Router({
       path: '/video',
       name: 'video',
       component: Video,
+    },
+    {
+      path: '/',
+      redirect: '/web/www/index.html#/list',
     }
-
     // {
     //   path: '/home',
     //   name: 'home',

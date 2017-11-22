@@ -108,6 +108,9 @@ export const sendPrivate = Axios.post('/user/message');//发送私信
 
 //login.vue
 export const login = Axios.post('/user/login');//login
+export const emailRegister = Axios.post('/user/register');//邮箱注册
+export const sendRegCode = Axios.post('/user/sendregcode');//发送注册验证码 用于（注册，绑定，更新手机号）
+export const mobileRegister = Axios.post('/user/phoneregister')//手机注册
 
 
 
