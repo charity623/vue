@@ -204,7 +204,7 @@ export default {
                 Tool.text("请输入手机号");
                 return false;
             }
-            const res = await sendRegCode('phone',this.mRegisterParams.phone)
+            const res = await sendRegCode({'phone':this.mRegisterParams.phone})
             console.log(res)
             if(res.error==0&&res.error){
                 Tool.text("验证码发送成功");
@@ -218,9 +218,9 @@ export default {
                 Tool.text("请输入手机号");
                 return false;
             }
-            const res = await sendFindCode('phone',this.mfindPwd.phone)
+            const res = await sendFindCode({'phone':this.mfindPwd.phone})
             console.log(res)
-            if(res.error==0&&res.error){
+            if(res.error==0){
                 Tool.text("验证码发送成功");
                 this.getCode();
             } else {
