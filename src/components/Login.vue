@@ -11,6 +11,10 @@
                 <hr>
                 <input type="text" placeholder="手机号/邮箱" v-model="loginParams.username">
                 <input type="password" placeholder="密码" v-model="loginParams.password">
+                <div class="getImgCode" v-show="isshowLogincode">
+                    <input type="text" placeholder="验证码" v-model="loginParams.captcha">
+                    <img v-bind:src="getImgCodeParam" alt="" @click="getImgCode()">
+                </div>
                 <input type="button" value="登陆" @click="login()">
                 <div>
                     <span @click="showPanel=2">忘记密码？</span>
@@ -25,17 +29,22 @@
                 </ul>
                 <hr>
                 <div v-show="nowIndex==0">
-                    <input type="text" placeholder="绑定手机">
+                    <input type="text" placeholder="绑定手机" v-model="mfindPwd.phone">
                     <div class="getCode">
-                        <input type="text" placeholder="验证码">
-                        <span v-show="show" @click="getCode">获取验证码</span>
+                        <input type="text" placeholder="验证码" v-model="mfindPwd.code">
+                        <span v-show="show" @click="sendFindPwdCode()">获取验证码</span>
                         <span v-show="!show" class="count">{{count}} s</span>
                     </div>
-                    <input type="button" value="登陆">
+                    <input type="password" placeholder="新密码" v-model="mfindPwd.password">
+                    <input type="button" value="确认" @click="findPwd(1)">
                 </div>
                 <div v-show="nowIndex==1">
-                    <input type="text" placeholder="输入注册邮箱">
-                    <input type="button" value="发送验证邮件">
+                    <input type="text" placeholder="输入注册邮箱" v-model = "efindPwd.email">
+                    <div class="getImgCode">
+                        <input type="text" placeholder="验证码" v-model="efindPwd.captcha">
+                        <img v-bind:src="getImgCodeParam" alt="" @click="getImgCode()">
+                    </div>
+                    <input type="button" value="发送验证邮件" @click="findPwd(2)">
                 </div>
                 <a @click="showPanel=1">返回上一级</a>
             </div>
@@ -53,8 +62,8 @@
                         <span v-show="show" @click="sendRegisterCode">获取验证码</span>
                         <span v-show="!show" class="count">{{count}}s</span>
                     </div>
-                    <input type="text" placeholder="昵称">
-                    <input type="button" value="注册">
+                    <input type="text" placeholder="昵称" v-model="mRegisterParams.name">
+                    <input type="button" value="注册" @click="mobileRegister()">
                 </div>
                 <div v-show="nowIndex==1">
                     <input type="text" placeholder="输入注册邮箱" v-model="eRegisterParams.email">
@@ -139,7 +148,7 @@
 </style>
 
 <script>
-import {login,emailRegister,sendRegCode,mobileRegister} from '@/utils/http'
+import {login,emailRegister,sendRegCode,mobileRegister,findPwdByPhone,findPwdByEmail,sendFindCode} from '@/utils/http'
 import { mapState, mapActions } from 'vuex'
 import Tool from "../utils/Tool"
 
@@ -204,14 +213,29 @@ export default {
                 Tool.text(res.desc)
             }
         },
+        async sendFindPwdCode(){
+            if(!this.mfindPwd.phone){
+                Tool.text("请输入手机号");
+                return false;
+            }
+            const res = await sendFindCode('phone',this.mfindPwd.phone)
+            console.log(res)
+            if(res.error==0&&res.error){
+                Tool.text("验证码发送成功");
+                this.getCode();
+            } else {
+                Tool.text(res.desc)
+            }
+        },
         async login() {
             const res = await login(this.loginParams)
             this.logindata = res;
             if(this.logindata.error==0){
                 Tool.localItem("token",this.logindata.token);
-                //link to prev-page or open index.html
+                window.location.href = "www.tianyantv.com"
             } else {
-                Tool.text('密码错误三次')
+                Tool.text('密码错误三次');
+                this.isshowLogincode = !this.isshowLogincode;
             }
         },
         async emailRegister() {
@@ -224,22 +248,55 @@ export default {
                 Tool.text(res.desc)
             }
         },
+        async mobileRegister(){
+            const res = await mobileRegister(this.mRegisterParams)
+            this.mRegisterdata = res;
+            if(res.error==0){
+                Tool.text("注册成功")
+            } else {
+                Tool.text(res.desc)
+            }
+        },
+        async findPwd(type){
+            //type 1：手机 2：邮箱
+            switch (type) {
+                case 1:
+
+                    const res = await findPwdByPhone(this.mfindPwd);
+                    if(res.error==0){
+                        Tool.text(res.desc)
+                    };
+                    return false;
+                case 2:
+                    const res1 = await findPwdByEmail();
+                    if(res1.error==0){
+
+                    } else {
+                        Tool.text(res1.desc)
+                    };
+                    return false;
+            }
+        }
 	},
 	data() {
 		return {
             show: true,
             count: '',
             timer: null,
-            showPanel:3,//1登陆 2找回面膜 3注册
+            showPanel:2,//1登陆 2找回密码 3注册
             tabsParam:['手机找回','邮箱找回'],
             registertabsParam:['手机注册','邮箱注册'],
-            nowIndex:1,//默认第一个tab为激活状态
+            nowIndex:0,//默认第一个tab为激活状态
             loginParams:{},//login model
             logindata:{},
             eRegisterParams:{},//邮箱注册 model
             eRegisterdata:{},
-            getImgCodeParam:'http://192.168.10.121/user/captcha',
-            mRegisterParams:{}
+            getImgCodeParam:'http://192.168.10.121/user/captcha',//图片验证码
+            mRegisterParams:{},//手机注册 model
+            mRegisterdata:{},
+            isshowLogincode:false,
+            mfindPwd:{},//找回密码 by mobile 
+            efindPwd:{},//找回密码 by email
 		}
 	}
 }

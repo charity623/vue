@@ -1,6 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL = 'http://192.168.10.121'
+// axios.defaults.baseURL = 'http://www.tianyantv.com'
 //设置默认请求头
 axios.defaults.headers = {
 	'Content-Type': 'application/json'
@@ -110,7 +111,10 @@ export const sendPrivate = Axios.post('/user/message');//发送私信
 export const login = Axios.post('/user/login');//login
 export const emailRegister = Axios.post('/user/register');//邮箱注册
 export const sendRegCode = Axios.post('/user/sendregcode');//发送注册验证码 用于（注册，绑定，更新手机号）
+export const sendFindCode = Axios.post('/user/sendcode');//发送验证码 用于（找回，重置）
 export const mobileRegister = Axios.post('/user/phoneregister')//手机注册
+export const findPwdByPhone = Axios.post('/user/phoneresetpwd')//手机找回密码
+export const findPwdByEmail = Axios.post('/user/forget')//邮箱找回密码
 
 
 
