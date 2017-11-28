@@ -94,6 +94,11 @@
         			</a>
         		</li>
         	</ul>
+            <div v-show="slicedRecordInfo.length==0" style="margin-bottom:30px">
+              
+                    <img src="../assets/no_videos.png" alt="">
+              
+            </div>
         	<div class="others">
         		<div class="left">
                     <div v-if="user.type==5">
@@ -101,22 +106,25 @@
                             <div class="avatar"><img v-bind:src="user.thumb" alt=""></div>
                             <h4>{{user.title}}</h4>
                             <p>{{user.description}}</p>
-                            <a href="">前往直播间>></a>
+                            <a :href="'/web/www/live-new.html#/live?id='+user.id" target="_blank">前往直播间>></a>
                         </div>
-                        <div class="otherlinks">
+                       <!--  <div class="otherlinks">
                             <h3>主播其他链接</h3>
                             <div class="linklist">
                                 <div class="weibo"></div>
                                 <div class="douban"></div>
                                 <div class="taobao"></div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="assolivers">
                             <h3>关联主播</h3>
                             <div class="assolist" >
                                 <div class="assoitem" v-for="i in assolist" :key="i">
-                                    <img v-bind:src="i.headimgurl" alt="">
-                                    <p>{{i.name}}</p>
+                                    <a :href="'/#/person/'+i.assocuid" target="_blank">
+                                        <img v-bind:src="i.headimgurl" alt="">
+                                        <p>{{i.name}}</p>
+                                    </a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -127,6 +135,9 @@
                             <div class="visitoritem" v-for="i in visitorlist" :key="i">
                                 <img v-bind:src="i.headimgurl" alt="">
                                 <p>{{i.name}}</p>
+                            </div>
+                            <div v-show="visitorlist.length==0" class="noVisitor">
+                                暂无记录
                             </div>
                         </div>
                     </div>
@@ -260,6 +271,7 @@
 <style scoped>
 .show{display: block!important;}
 .mask{width:100%;height:100%;background:rgba(0,0,0,.4);position: fixed;top:0;left:0;z-index: 2;display: none;}
+.noVisitor{font-size: 16px;color:#666;margin-bottom:20px;}
 .panel{border-radius: 5px;background: #fff;position:fixed;left:50%;top:50%;-webkit-transform:translate(-50%,-50%);z-index: 3;}
 .panel.msgPanel{width:562px;/*height:428px;*/}
 .msgPanel h3{margin:40px auto 44px;text-align: center;font-size: 30px; color:#666;}

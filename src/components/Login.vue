@@ -1,7 +1,7 @@
 <template>
 	<div class="container">
-        <img src="../assets/login_bg.png" alt="">
-        <div class="main">
+        <div class="loginBg">
+             <div class="main">
             <div class="header">
                 <img src="../assets/head_diagram.png" alt="">
             </div>
@@ -20,7 +20,7 @@
                     <span @click="showPanel=2">忘记密码？</span>
                     <span @click="showPanel=3">新用户注册</span>
                 </div>
-                <a href="/"><img src="../assets/weixin_login.png" alt=""></a>
+                <a href="https://open.weixin.qq.com/connect/qrconnect?appid=wxc758e658b645e8af&redirect_uri=http%3A%2F%2Fwww.tianyantv.com%2Fwechat%2Foauth_callback&response_type=code&scope=snsapi_login&state=web#wechat_redirect"><img src="../assets/weixin_login.png" alt=""></a>
             </div>
             <!-- 找回密码 -->
             <div class="panel findpanel" v-if="showPanel==2">
@@ -78,6 +78,8 @@
                 <a @click="showPanel=1">已有账号？直接登陆</a>
             </div>
         </div>
+        </div>
+       
         <footer>
             <div class="top">
                 <img src="../assets/blurb.png" alt="">
@@ -106,6 +108,7 @@
 <style scoped>
     .show{display: block!important;}
     .mask{width:100%;height:100%;background:rgba(0,0,0,.4);position: fixed;top:0;left:0;z-index: 2;display: none;}
+    .loginBg{background:url(/static/img/login_bg.png) top center no-repeat;width:100%;height:773px;background-size:100%; }
     .panel{border-radius: 5px;background: #fff;width:390px;padding:36px 24px 20px;margin:0 auto;box-shadow: 2px 0 8px rgba(0,0,0,.4);}
     .panel>h3{font-size: 22px;color:#666;font-weight: normal;text-align: left;}
     .panel>hr{border:0;height:1px;background: #e6e6e6;margin:24px auto
@@ -128,9 +131,10 @@
     .getImgCode img{height:38px;float: right;border: 1px solid #ddd}
     .main{position: fixed;top:40px;width:100%;}
     .main>.header{margin:0 auto 66px;}
+    .container{min-width: 1200px;}
      .container>img{width:100%;}
      
-     footer{width:100%;background:#fff;position: fixed;bottom: 0;}
+     footer{width:100%;background:#fff;}
      footer>div{width:1200px;margin:0 auto;}
      footer .top{height:174px;}
      footer .top img{margin-top:20px;margin-right:72px;}
@@ -179,6 +183,9 @@ export default {
 	methods: {
          toggleTabs(index){
             this.nowIndex=index;
+        },
+        linkToIndex(){
+            window.location.href = "http://192.168.10.121"
         },
         getCode(){
             const TIME_COUNT = 3;
@@ -232,7 +239,8 @@ export default {
             this.logindata = res;
             if(this.logindata.error==0){
                 Tool.localItem("token",this.logindata.token);
-                window.location.href = "www.tianyantv.com"
+                this.linkToIndex();
+                
             } else {
                 Tool.text('密码错误三次');
                 this.isshowLogincode = !this.isshowLogincode;
@@ -283,7 +291,7 @@ export default {
             show: true,
             count: '',
             timer: null,
-            showPanel:2,//1登陆 2找回密码 3注册
+            showPanel:1,//1登陆 2找回密码 3注册
             tabsParam:['手机找回','邮箱找回'],
             registertabsParam:['手机注册','邮箱注册'],
             nowIndex:0,//默认第一个tab为激活状态
