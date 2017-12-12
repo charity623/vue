@@ -1,7 +1,7 @@
 import axios from "axios";
 
-axios.defaults.baseURL = 'http://192.168.10.121'
-// axios.defaults.baseURL = 'http://www.tianyantv.com'
+// axios.defaults.baseURL = 'http://192.168.10.121'
+axios.defaults.baseURL = 'http://www.tianyantv.com'
 //设置默认请求头
 axios.defaults.headers = {
 	'Content-Type': 'application/json'

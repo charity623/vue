@@ -340,9 +340,10 @@
 	.others .left .liver{width:100%;min-height:350px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:22px;padding-top:30px;}
 	.others .left .liver>.avatar{margin:0 auto 22px;width:280px;height:154px;background:#999;border-radius: 10px;}
     .others .left .liver>.avatar img{width:100%;height:100%;border-radius: 10px;}
-	.others .left .liver>h4{font-size: 18px;color:#333;font-weight: normal;margin-bottom:30px;padding-left:30px;}
-	.others .left .liver>p{font-size: 16px;color:#666;font-weight: normal;margin-bottom:38px;padding-left:30px;}
-	.others .left .liver>a{font-size: 16px;color:#333;font-weight: normal;margin-bottom:20px;padding-right:30px;float: right;}
+	.others .left .liver>h4{font-size: 18px;color:#333;font-weight: normal;padding-left:30px;}
+	.others .left .liver>p{font-size: 16px;color:#666;font-weight: normal;margin-bottom:8px;padding: 30px;text-indent: 30px;}
+	.others .left .liver>a{font-size: 16px;color:#333;font-weight: normal;margin-bottom:20px;padding-right:30px;text-align: right;
+    padding-bottom: 30px; display: block;}
 	.others .left .otherlinks{width:100%;height:178px;background:#fff;box-shadow:2px 0 21px rgba(100,108,206,.24);margin-bottom:28px;}
 	.others .left .otherlinks>h3{font-size: 16px;color:#333;margin:0 auto 36px;padding-top:20px;font-weight:bold;} 
     .others .left .otherlinks .linklist{width:264px;margin:0 auto;overflow: hidden;}
@@ -445,10 +446,10 @@ export default {
 		this.init();
 		this.getMsglist();
         this.getRecordlist();
-        console.log(id())
+        document.title = "天眼通个人页"
 	},
 	mounted() {
-		console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cLzE5Mi4xNjguMTAuMTIxXC9nZXR0b2tlbiIsImlhdCI6MTUxMDEyMTkxNiwiZXhwIjoxNTEwMzgxMTE2LCJuYmYiOjE1MTAxMjE5MTYsImp0aSI6IjA2YWE1OWZiYjY4NmFhY2YxNDNmMjhjNTdkOGYzMGZhIn0.TZLIS5DXrCqY-0eq5gN2khpR4BZZKachnWS5_XTwl5c"))
+		// console.log(Tool.localItem("token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cLzE5Mi4xNjguMTAuMTIxXC9nZXR0b2tlbiIsImlhdCI6MTUxMDEyMTkxNiwiZXhwIjoxNTEwMzgxMTE2LCJuYmYiOjE1MTAxMjE5MTYsImp0aSI6IjA2YWE1OWZiYjY4NmFhY2YxNDNmMjhjNTdkOGYzMGZhIn0.TZLIS5DXrCqY-0eq5gN2khpR4BZZKachnWS5_XTwl5c"))
 	},
 	computed: {
 		...mapState({
