@@ -309,6 +309,7 @@ export default {
             //q1：DOM是那种基本的数据结构
             //q2：DOM操作的常用api有哪些 
             //q3：DOM元素的attribute和property有何区别
+            //attribute:对html
             var div1 = document.getElementById('div1');//元素
             var divlist = document.getElementsByTagName('div');//集合
             var containerlist = document.getElementsByClassName('.container')//集合
@@ -325,7 +326,20 @@ export default {
             // 4.删除节点
             // removeChild();
 
-            //该看5-7了
+            //git常用命令
+            //git add .
+            //git checkout xxx //还原
+            //git commit -m "xxx" //本地仓库
+            //git push origin master//提交到远程仓库
+            //git pull origin master//拉代码
+            //git branch 分支
+            //git checkout -b xxx //新建分支
+            //git checkout xxx //切换分支
+            //git merge xxx 合并分支
+            //git status //查看更改的文件
+            //git diff //查看新增
+            //git clone
+            //看到7-6
         }
         
 	},
